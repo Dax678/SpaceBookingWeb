@@ -13,20 +13,21 @@ import java.util.Date;
 @Entity
 @Table(name = "reservation", schema = "public")
 public class Reservation {
+    //PK
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reservation_id")
     private Long id;
 
+    //FK
     @Column(name = "user_id")
     private Long user_id;
 
-    @Column(name = "floor_id")
-    private Long floor_id;
-
+    //FK
     @Column(name = "space_id")
     private Long space_id;
 
+    //FK
     @Column(name = "payment_id")
     private Long payment_id;
 
@@ -43,13 +44,6 @@ public class Reservation {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id",
             insertable = false, updatable = false)
     private User user;
-
-    @JsonIgnore // Ignoruje pole "parent" podczas serializacji
-    @ManyToOne(cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "floor_id", referencedColumnName = "floor_id",
-            insertable = false, updatable = false)
-    private Floor floor;
 
     @JsonIgnore // Ignoruje pole "parent" podczas serializacji
     @ManyToOne(cascade = CascadeType.ALL,

@@ -11,5 +11,5 @@ import java.util.List;
 public interface FloorRepository extends JpaRepository<Floor, Long> {
 
     Floor findFloorById(Long id);
-    List<Floor> findFloorsByDepartment(String type);
+    List<Floor> findFloorsByName(String type);
 }

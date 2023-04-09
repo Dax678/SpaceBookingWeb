@@ -7,6 +7,8 @@ import com.example.spacebookingweb.Repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class ReservationService {
@@ -14,5 +16,9 @@ public class ReservationService {
 
     public Reservation getReservationById(Long id) {
         return reservationRepository.findReservationById(id);
+    }
+
+    public List<Reservation> getReservationByUserId(Long id) {
+        return reservationRepository.findReservationByUserId(id);
     }
 }

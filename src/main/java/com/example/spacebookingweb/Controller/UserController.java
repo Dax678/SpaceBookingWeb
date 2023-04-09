@@ -1,6 +1,9 @@
 package com.example.spacebookingweb.Controller;
 
+import com.example.spacebookingweb.Database.Entity.Floor;
+import com.example.spacebookingweb.Database.Entity.Reservation;
 import com.example.spacebookingweb.Database.Entity.User;
+import com.example.spacebookingweb.Service.ReservationService;
 import com.example.spacebookingweb.Service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,10 +17,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 public class UserController {
     UserService userService;
+    ReservationService reservationService;
 
     //Get user by id
     @GetMapping("/api/getUserById/{id}")
@@ -35,7 +41,7 @@ public class UserController {
         System.out.println(id);
         User user = userService.getUserById(id);
 
-        if(user == null) {
+        if (user == null) {
             return ResponseEntity.notFound().build();
         }
 
@@ -55,11 +61,30 @@ public class UserController {
         System.out.println(username);
         User user = userService.getUserByUsername(username);
 
-        if(user == null) {
+        if (user == null) {
             return ResponseEntity.notFound().build();
         }
 
         return ResponseEntity.ok(user);
+    }
+
+    @Operation(
+            summary = "Get user reservations by userId",
+            description = "Get user reservations by userId. It returns ResponseEntity<List<Reservation>>",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "User reservations"),
+                    @ApiResponse(responseCode = "404", description = "Reservation not found")
+            }
+    )
+    @GetMapping("/api/getReservationByUserId/{id}")
+    public ResponseEntity<List<Reservation>> getReservationByUserId(@PathVariable("id") Long id) {
+        List<Reservation> reservationList = reservationService.getReservationByUserId(id);
+
+        if (reservationList.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(reservationList);
     }
 
     @Operation(

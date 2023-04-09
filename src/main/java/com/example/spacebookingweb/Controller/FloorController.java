@@ -46,11 +46,11 @@ public class FloorController {
                     @ApiResponse(responseCode = "404", description = "Floor not found")
             }
     )
-    @GetMapping("/api/getFloorsByDepartment/{type}")
-    public ResponseEntity<List<Floor>> getFloorsByDepartment(
+    @GetMapping("/api/getFloorsByName/{type}")
+    public ResponseEntity<List<Floor>> getFloorsByName(
             @PathVariable("type") String type) {
         System.out.println(type);
-        List<Floor> floorList = floorService.getFloorsByDepartment(type);
+        List<Floor> floorList = floorService.getFloorsByName(type);
 
         if (floorList.isEmpty()) {
             return ResponseEntity.notFound().build();

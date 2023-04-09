@@ -24,11 +24,11 @@ public class Floor {
     @Column(name = "floor_num")
     private String floor_num;
 
-    //IT, HR, Finance, General - 4 types
-    @Column(name = "department")
-    private String department;
+    //IT, HR, Finance, Parking - 4 types
+    @Column(name = "name")
+    private String name;
 
     @OneToMany(mappedBy = "floor")
     @JsonIgnore
-    private List<Reservation> reservationList;
+    private List<Space> spaceList;
 }
