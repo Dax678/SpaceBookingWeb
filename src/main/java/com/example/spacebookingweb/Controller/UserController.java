@@ -2,8 +2,10 @@ package com.example.spacebookingweb.Controller;
 
 import com.example.spacebookingweb.Database.Entity.User;
 import com.example.spacebookingweb.Service.UserService;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,17 +21,12 @@ public class UserController {
 
     //Get user by id
     @GetMapping("/api/getUserById/{id}")
-//    @ApiOperation(value = "Get user by ID", response = User.class)
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "User found"),
-//            @ApiResponse(code = 404, message = "User not found")
-//    })
     @Operation(
-            summary = "Pobierz szczegóły użytkownika",
-            description = "Pobierz szczegółowe informacje o użytkowniku po numerze identyfikacyjnym",
+            summary = "Get user information by ID",
+            description = "Get user information by ID. It returns ResponseEntity<User>",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Szczegóły użytkownika"),
-                    @ApiResponse(responseCode = "404", description = "Nie znaleziono użytkownika")
+                    @ApiResponse(responseCode = "200", description = "User info"),
+                    @ApiResponse(responseCode = "404", description = "User not found")
             }
     )
     public ResponseEntity<User> getUserById(
@@ -45,7 +42,14 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    //Get user by username
+    @Operation(
+            summary = "Get user information by username",
+            description = "Get user information by username. It returns ResponseEntity<User>",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "User info"),
+                    @ApiResponse(responseCode = "404", description = "User not found")
+            }
+    )
     @GetMapping("/api/getUserByUsername/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable("username") String username) {
         System.out.println(username);
@@ -58,7 +62,14 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    //Adding a user to the DB
+    @Operation(
+            summary = "Save user",
+            description = "Save user.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "User saved"),
+                    @ApiResponse(responseCode = "404", description = "Error saving user")
+            }
+    )
     @PostMapping("/api/addUser")
     public ResponseEntity<String> addUser(User user) {
         User savedUser = userService.saveUser(user);
