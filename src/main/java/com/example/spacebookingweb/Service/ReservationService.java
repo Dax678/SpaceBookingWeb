@@ -1,15 +1,12 @@
 package com.example.spacebookingweb.Service;
 
 import com.example.spacebookingweb.Database.Entity.Reservation;
-import com.example.spacebookingweb.Database.Entity.User;
 import com.example.spacebookingweb.Database.View.UserReservationView;
 import com.example.spacebookingweb.Repository.ReservationRepository;
-import com.example.spacebookingweb.Repository.UserRepository;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -28,4 +25,14 @@ public class ReservationService {
     public List<UserReservationView> getActiveReservationByUserId(Long id) {
         return reservationRepository.findActiveReservationByUserId(id);
     }
+
+    public Reservation saveReservation(Long user_id, Long space_id, LocalDateTime start_date, LocalDateTime end_date) {
+        Reservation reservation = new Reservation();
+        reservation.setUser_id(user_id);
+        reservation.setSpace_id(space_id);
+        reservation.setStart_date(start_date);
+        reservation.setEnd_date(end_date);
+        return reservationRepository.save(reservation);
+    }
+
 }
