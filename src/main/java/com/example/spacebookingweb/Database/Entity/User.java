@@ -31,6 +31,9 @@ public class User {
     @Column(unique = true)
     private String email;
 
+    @Column(name = "role")
+    private String role;
+
     @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY, optional = false)
