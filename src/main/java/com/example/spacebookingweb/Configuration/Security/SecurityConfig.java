@@ -41,13 +41,15 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/web/login").permitAll();
-                    auth.requestMatchers("/web", "/web/logout").hasRole(USER.name());
+                    auth.requestMatchers("/web/login", "/index*", "/static/**", "/*.js", "/*.json", "/*.ico", "/css/assets/**").permitAll();
+                    auth.requestMatchers("/web", "/web/logout", "/web/my-reservations", "/web/profile").hasRole(USER.name());
+                    //TODO: DOROBIC swaggera zeby dzialal po zalogowaniu na ADMIN
                     auth.requestMatchers("/api/**").hasRole(ADMIN.name());
                 })
                 .formLogin()
                 .loginPage("/web/login")
                 .permitAll()
+//                .loginProcessingUrl("/perform_login")
                 .defaultSuccessUrl("/web")
                 //TODO: DOROBIC Auto przekierowywanie dla roli ADMIN
 //                .successHandler((request, response, authentication) -> {

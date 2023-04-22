@@ -31,3 +31,23 @@ build/
 
 ### VS Code ###
 .vscode/
+/src/main/my-app/.gitignore
+/src/main/resources/static/static/js/787.28cb0dcd.chunk.js
+/src/main/resources/static/static/js/787.28cb0dcd.chunk.js.map
+/src/main/my-app/src/App.css
+/src/main/my-app/src/App.js
+/src/main/my-app/src/App.test.js
+/src/main/my-app/public/favicon.ico
+/src/main/my-app/src/index.css
+/src/main/my-app/public/index.html
+/src/main/my-app/src/index.js
+/src/main/my-app/src/logo.svg
+/src/main/my-app/public/logo192.png
+/src/main/my-app/public/logo512.png
+/src/main/my-app/public/manifest.json
+/src/main/my-app/package.json
+/src/main/my-app/package-lock.json
+/src/main/my-app/README.md
+/src/main/my-app/src/reportWebVitals.js
+/src/main/my-app/public/robots.txt
+/src/main/my-app/src/setupTests.js

@@ -10,17 +10,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class IndexController {
+public class WebReservationController {
     ReservationService reservationService;
     UserService userService;
     @Autowired
-    public IndexController(ReservationService reservationService, UserService userService) {
+    public WebReservationController(ReservationService reservationService, UserService userService) {
         this.reservationService = reservationService;
         this.userService = userService;
     }
 
-    @GetMapping("/web")
-    public String getIndex(Model model) {
+    @GetMapping("/web/reservations")
+    public String getWebReservationController(Model model) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = "nieznany użytkownik";
         if (principal instanceof UserDetails) {
@@ -31,6 +31,6 @@ public class IndexController {
 
         model.addAttribute("user_reservation", reservationService.getReservationByUserId(userService.getUserByUsername(username).getId()));
 
-        return "index";
+        return "my-reservations";
     }
 }

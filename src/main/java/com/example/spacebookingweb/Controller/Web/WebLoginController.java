@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class LoginController {
+public class WebLoginController {
     @GetMapping("/web/login")
     public String getLogin() {
         return "login";
@@ -14,4 +14,10 @@ public class LoginController {
     public String getLogout() {
         return "logout";
     }
+
+    @GetMapping("/web/register")
+    public String getRegister() {
+        return "register";
+    }
+
 }

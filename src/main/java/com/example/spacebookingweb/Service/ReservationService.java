@@ -35,4 +35,8 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
+    public void deleteReservationById(Long id) {
+        reservationRepository.deleteReservationById(id);
+    }
+
 }

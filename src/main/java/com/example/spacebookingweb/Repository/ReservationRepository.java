@@ -13,6 +13,9 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     Reservation findReservationById(Long id);
 
+    //TODO: Dodac usuwanie rezerwacji + zabezpiecznia
+    void deleteReservationById(Long id);
+
     @Query(value = "SELECT view FROM UserReservationView view WHERE view.user_id=:id")
     List<UserReservationView> findReservationByUserId(Long id);
 
