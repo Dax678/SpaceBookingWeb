@@ -21,6 +21,16 @@ public class WebIndexController {
 
     @GetMapping("/web")
     public String getWebIndexController(Model model) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = "nieznany użytkownik";
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+
+        model.addAttribute("user_reservation", reservationService.getReservationByUserId(userService.getUserByUsername(username).getId()));
+
         return "index";
     }
 }

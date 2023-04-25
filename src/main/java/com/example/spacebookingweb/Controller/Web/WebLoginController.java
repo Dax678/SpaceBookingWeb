@@ -7,17 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class WebLoginController {
     @GetMapping("/web/login")
     public String getLogin() {
-        return "login";
+        return "loginPage";
     }
 
     @GetMapping("/web/logout")
     public String getLogout() {
-        return "logout";
+        return "loginPage";
     }
-
-    @GetMapping("/web/register")
-    public String getRegister() {
-        return "register";
-    }
-
 }

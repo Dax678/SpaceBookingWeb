@@ -29,8 +29,8 @@ public class WebReservationController {
             username = principal.toString();
         }
 
-        model.addAttribute("user_reservation", reservationService.getReservationByUserId(userService.getUserByUsername(username).getId()));
+        model.addAttribute("reservationList", reservationService.getReservationByUserId(userService.getUserByUsername(username).getId()));
 
-        return "my-reservations";
+        return "reservationPage";
     }
 }

@@ -41,15 +41,14 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/web/login", "/index*", "/static/**", "/*.js", "/*.json", "/*.ico", "/css/assets/**").permitAll();
-                    auth.requestMatchers("/web", "/web/logout", "/web/my-reservations", "/web/profile").hasRole(USER.name());
+//                    auth.requestMatchers("/api/**").hasRole(ADMIN.name());
+                    auth.requestMatchers("/web", "/web/logout", "/web/reservations", "/web/profile").hasRole(USER.name());
+                    auth.requestMatchers("/web/login", "/web/register", "/web/TermsOfServicePage", "/css/**").permitAll();
+                    auth.requestMatchers("/api/addUser").permitAll();
                     //TODO: DOROBIC swaggera zeby dzialal po zalogowaniu na ADMIN
-                    auth.requestMatchers("/api/**").hasRole(ADMIN.name());
                 })
                 .formLogin()
                 .loginPage("/web/login")
-                .permitAll()
-//                .loginProcessingUrl("/perform_login")
                 .defaultSuccessUrl("/web")
                 //TODO: DOROBIC Auto przekierowywanie dla roli ADMIN
 //                .successHandler((request, response, authentication) -> {
@@ -58,7 +57,13 @@ public class SecurityConfig {
 //                    }
 //                })
                 .usernameParameter("username")
-                .passwordParameter("password")
+                .passwordParameter("password").permitAll()
+                .and()
+                .logout()
+                .logoutUrl("/web/logout")
+                .logoutSuccessUrl("/web/login")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID").permitAll()
                 .and()
                 .httpBasic(Customizer.withDefaults())
                 .build();
@@ -66,7 +71,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/css/**", "/js/**", "/assets/**","/resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui/index.html");
+        return (web) -> web.ignoring().requestMatchers("/css/**", "/resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui/index.html");
     }
 
     @Bean

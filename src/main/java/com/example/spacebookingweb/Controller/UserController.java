@@ -3,6 +3,7 @@ package com.example.spacebookingweb.Controller;
 import com.example.spacebookingweb.Database.Entity.Floor;
 import com.example.spacebookingweb.Database.Entity.Reservation;
 import com.example.spacebookingweb.Database.Entity.User;
+import com.example.spacebookingweb.Database.Entity.UserRegisterForm;
 import com.example.spacebookingweb.Database.View.UserReservationView;
 import com.example.spacebookingweb.Service.ReservationService;
 import com.example.spacebookingweb.Service.UserService;
@@ -16,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.example.spacebookingweb.Configuration.Security.auth.ApplicationUserRole.USER;
 
 @RestController
 @AllArgsConstructor
@@ -112,8 +115,17 @@ public class UserController {
                     @ApiResponse(responseCode = "404", description = "Error saving user")
             }
     )
-    @PostMapping("/api/addUser")
-    public ResponseEntity<String> addUser(User user) {
+    //@PostMapping("/api/addUser")
+    @RequestMapping(value = "/api/addUser", produces = "application/json", method = RequestMethod.POST)
+    public ResponseEntity<String> addUser(@RequestBody UserRegisterForm userRegisterForm) {
+        System.out.println("ADDING: " + userRegisterForm.toString());
+        User user = new User();
+
+        user.setUsername(userRegisterForm.getUsername());
+        user.setPassword(userRegisterForm.getPassword());
+        user.setEmail(userRegisterForm.getEmail());
+        user.setRole(USER.name());
+
         User savedUser = userService.saveUser(user);
         if (savedUser != null) {
             return ResponseEntity.ok("User saved successfully.");
