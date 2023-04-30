@@ -18,6 +18,25 @@ public class FloorController {
     FloorService floorService;
 
     @Operation(
+            summary = "Get list of floors",
+            description = "Get list of floors",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Floor list"),
+                    @ApiResponse(responseCode = "404", description = "Floor not found")
+            }
+    )
+    @GetMapping("/api/getFloorList")
+    public ResponseEntity<List<Floor>> getAll() {
+        List<Floor> floorList= floorService.getAll();
+
+        if (floorList == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(floorList);
+    }
+
+    @Operation(
             summary = "Get floor information by ID",
             description = "Get floor information by ID. It returns ResponseEntity<Floor>",
             responses = {
@@ -47,15 +66,15 @@ public class FloorController {
             }
     )
     @GetMapping("/api/getFloorsByName/{type}")
-    public ResponseEntity<List<Floor>> getFloorsByName(
+    public ResponseEntity<Floor> getFloorsByName(
             @PathVariable("type") String type) {
         System.out.println(type);
-        List<Floor> floorList = floorService.getFloorsByName(type);
+        Floor floor = floorService.getFloorsByName(type);
 
-        if (floorList.isEmpty()) {
+        if (floor == null) {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(floorList);
+        return ResponseEntity.ok(floor);
     }
 }

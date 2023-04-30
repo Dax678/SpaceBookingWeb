@@ -116,14 +116,13 @@ public class UserController {
             }
     )
     //@PostMapping("/api/addUser")
-    @RequestMapping(value = "/api/addUser", produces = "application/json", method = RequestMethod.POST)
-    public ResponseEntity<String> addUser(@RequestBody UserRegisterForm userRegisterForm) {
-        System.out.println("ADDING: " + userRegisterForm.toString());
+    @RequestMapping(value = "/api/addUser", method = RequestMethod.POST)
+    public ResponseEntity<String> addUser(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password, @RequestParam(value = "email") String email) {
         User user = new User();
 
-        user.setUsername(userRegisterForm.getUsername());
-        user.setPassword(userRegisterForm.getPassword());
-        user.setEmail(userRegisterForm.getEmail());
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setEmail(email);
         user.setRole(USER.name());
 
         User savedUser = userService.saveUser(user);

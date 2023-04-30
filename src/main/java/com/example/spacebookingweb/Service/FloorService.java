@@ -18,7 +18,11 @@ public class FloorService {
         return floorRepository.findFloorById(id);
     }
 
-    public List<Floor> getFloorsByName(String type) {
+    public Floor getFloorsByName(String type) {
         return floorRepository.findFloorsByName(type);
+    }
+
+    public List<Floor> getAll() {
+        return floorRepository.findAll();
     }
 }

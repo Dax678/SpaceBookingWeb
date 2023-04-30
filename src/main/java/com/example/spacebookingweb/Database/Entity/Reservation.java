@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @RequiredArgsConstructor
 @Getter
@@ -32,11 +34,9 @@ public class Reservation {
     private Long payment_id;
 
     //cannot be > 1 day
-    @Column(name = "reservation_start_date")
-    private LocalDateTime start_date;
+    @Column(name = "reservation_date")
+    private LocalDate reservation_date;
 
-    @Column(name = "reservation_end_date")
-    private LocalDateTime end_date;
 
     @JsonIgnore // Ignoruje pole "parent" podczas serializacji
     @ManyToOne(cascade = CascadeType.ALL,

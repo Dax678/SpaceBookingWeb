@@ -9,8 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 @RestController
 @AllArgsConstructor
@@ -39,10 +41,10 @@ public class ReservationController {
     }
 
     @PostMapping("/api/addReservation")
-    public ResponseEntity<String> addReservation(Long user_id, Long space_id, String start_date, String end_date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"); //2023-05-04T10:30:00
+    public ResponseEntity<String> addReservation(Long user_id, Long space_id, LocalDate date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); //2023-05-04T10:30:00
 
-        Reservation reservation = reservationService.saveReservation(user_id, space_id, LocalDateTime.parse(start_date, formatter), LocalDateTime.parse(end_date, formatter));
+        Reservation reservation = reservationService.saveReservation(user_id, space_id, date);
         if (reservation != null) {
             return ResponseEntity.ok("Reservation saved successfully.");
         } else {

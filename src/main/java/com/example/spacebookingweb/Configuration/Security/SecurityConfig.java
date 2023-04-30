@@ -42,9 +42,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
 //                    auth.requestMatchers("/api/**").hasRole(ADMIN.name());
-                    auth.requestMatchers("/web", "/web/logout", "/web/reservations", "/web/profile").hasRole(USER.name());
+                    auth.requestMatchers("/web", "/web/logout", "/web/reservations", "/web/profile", "/web/booking", "/web/booking/**").hasRole(USER.name());
                     auth.requestMatchers("/web/login", "/web/register", "/web/TermsOfServicePage", "/css/**").permitAll();
-                    auth.requestMatchers("/api/addUser").permitAll();
+                    auth.requestMatchers("/api/addUser", "/api/**").permitAll();
                     //TODO: DOROBIC swaggera zeby dzialal po zalogowaniu na ADMIN
                 })
                 .formLogin()
