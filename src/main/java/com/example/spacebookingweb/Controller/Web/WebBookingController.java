@@ -52,7 +52,7 @@ public class WebBookingController {
     }
 
     @PostMapping("/web/booking/{id}")
-    public String bookSpace(@PathVariable(value = "id") Long spaceId, @RequestParam("reservationDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate reservationDate) {
+    public void bookSpace(@PathVariable(value = "id") Long spaceId, @RequestParam("reservationDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate reservationDate) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = "nieznany użytkownik";
         if (principal instanceof UserDetails) {
@@ -62,6 +62,5 @@ public class WebBookingController {
         }
 
         reservationService.saveReservation(userService.getUserByUsername(username).getId(), spaceId, reservationDate);
-        return "redirect:/web";
     }
 }

@@ -1,6 +1,7 @@
 package com.example.spacebookingweb.Controller.Web;
 
 import com.example.spacebookingweb.Service.ReservationService;
+import com.example.spacebookingweb.Service.UserDetailsService;
 import com.example.spacebookingweb.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class WebIndexController {
     ReservationService reservationService;
     UserService userService;
+    UserDetailsService userDetailsController;
     @Autowired
     public WebIndexController(ReservationService reservationService, UserService userService) {
         this.reservationService = reservationService;
@@ -28,8 +30,6 @@ public class WebIndexController {
         } else {
             username = principal.toString();
         }
-
-        model.addAttribute("user_reservation", reservationService.getReservationByUserId(userService.getUserByUsername(username).getId()));
 
         return "index";
     }

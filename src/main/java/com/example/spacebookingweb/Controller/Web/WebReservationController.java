@@ -1,5 +1,6 @@
 package com.example.spacebookingweb.Controller.Web;
 
+import com.example.spacebookingweb.Database.View.UserReservationView;
 import com.example.spacebookingweb.Service.ReservationService;
 import com.example.spacebookingweb.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.awt.print.Pageable;
+import java.util.Comparator;
 
 @Controller
 public class WebReservationController {
@@ -29,7 +33,12 @@ public class WebReservationController {
             username = principal.toString();
         }
 
-        model.addAttribute("reservationList", reservationService.getReservationByUserId(userService.getUserByUsername(username).getId()));
+        model.addAttribute("reservationList",
+                reservationService.getReservationByUserId(
+                        userService.getUserByUsername(username).getId())
+                        .stream().sorted(Comparator.comparing(UserReservationView::getReservation_date))
+                        .toList()
+        );
 
         return "reservationPage";
     }
