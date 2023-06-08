@@ -37,6 +37,9 @@ public class Reservation {
     @Column(name = "reservation_date")
     private LocalDate reservation_date;
 
+    @Column(name = "reservation_status")
+    private Boolean reservation_status;
+
 
     @JsonIgnore // Ignoruje pole "parent" podczas serializacji
     @ManyToOne(cascade = CascadeType.ALL,

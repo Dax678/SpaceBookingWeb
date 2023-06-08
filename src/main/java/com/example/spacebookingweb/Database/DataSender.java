@@ -164,36 +164,42 @@
 //        reservation.setUser_id(2L);
 //        reservation.setSpace_id(47L);
 //        reservation.setReservation_date(LocalDate.of(2023, Month.MAY, 24));
+//        reservation.setReservation_status(Boolean.TRUE);
 //        reservationRepository.save(reservation);
 //
 //        reservation.setId(2L);
 //        reservation.setUser_id(2L);
 //        reservation.setSpace_id(65L);
 //        reservation.setReservation_date(LocalDate.of(2023, Month.MAY, 24));
+//        reservation.setReservation_status(Boolean.TRUE);
 //        reservationRepository.save(reservation);
 //
 //        reservation.setId(3L);
 //        reservation.setUser_id(2L);
 //        reservation.setSpace_id(47L);
 //        reservation.setReservation_date(LocalDate.of(2023, Month.MAY, 25));
+//        reservation.setReservation_status(Boolean.TRUE);
 //        reservationRepository.save(reservation);
 //
 //        reservation.setId(4L);
 //        reservation.setUser_id(2L);
 //        reservation.setSpace_id(65L);
 //        reservation.setReservation_date(LocalDate.of(2023, Month.MAY, 25));
+//        reservation.setReservation_status(Boolean.TRUE);
 //        reservationRepository.save(reservation);
 //
 //        reservation.setId(5L);
 //        reservation.setUser_id(2L);
 //        reservation.setSpace_id(48L);
 //        reservation.setReservation_date(LocalDate.of(2023, Month.MAY, 26));
+//        reservation.setReservation_status(Boolean.TRUE);
 //        reservationRepository.save(reservation);
 //
 //        reservation.setId(6L);
 //        reservation.setUser_id(2L);
 //        reservation.setSpace_id(66L);
 //        reservation.setReservation_date(LocalDate.of(2023, Month.MAY, 26));
+//        reservation.setReservation_status(Boolean.TRUE);
 //        reservationRepository.save(reservation);
 //    }
 //}

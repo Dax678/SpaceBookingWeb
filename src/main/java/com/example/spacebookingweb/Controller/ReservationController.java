@@ -16,6 +16,7 @@ import java.util.Date;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 public class ReservationController {
     ReservationService reservationService;
 

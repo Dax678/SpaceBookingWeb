@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Getter
@@ -32,7 +33,7 @@ public class User {
     private String email;
 
     @Column(name = "role")
-    private String role;
+    private ERole role;
 
     @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
@@ -43,4 +44,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Reservation> reservationList;
+
+    public ERole getRole() {
+        return role;
+    }
 }

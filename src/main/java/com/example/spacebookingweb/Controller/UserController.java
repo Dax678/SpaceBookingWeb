@@ -1,27 +1,22 @@
 package com.example.spacebookingweb.Controller;
 
-import com.example.spacebookingweb.Database.Entity.Floor;
-import com.example.spacebookingweb.Database.Entity.Reservation;
+import com.example.spacebookingweb.Database.Entity.ERole;
 import com.example.spacebookingweb.Database.Entity.User;
-import com.example.spacebookingweb.Database.Entity.UserRegisterForm;
 import com.example.spacebookingweb.Database.View.UserReservationView;
 import com.example.spacebookingweb.Service.ReservationService;
 import com.example.spacebookingweb.Service.UserService;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
-import static com.example.spacebookingweb.Configuration.Security.auth.ApplicationUserRole.USER;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 public class UserController {
     UserService userService;
     ReservationService reservationService;
@@ -97,6 +92,7 @@ public class UserController {
             }
     )
     @GetMapping("/api/getActiveReservationByUserId/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<List<UserReservationView>> getActiveReservationByUserId(@PathVariable("id") Long id) {
         List<UserReservationView> reservationList = reservationService.getActiveReservationByUserId(id);
 
@@ -115,7 +111,7 @@ public class UserController {
                     @ApiResponse(responseCode = "404", description = "Error saving user")
             }
     )
-    //@PostMapping("/api/addUser")
+
     @RequestMapping(value = "/api/addUser", method = RequestMethod.POST)
     public ResponseEntity<String> addUser(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password, @RequestParam(value = "email") String email) {
         User user = new User();
@@ -123,7 +119,7 @@ public class UserController {
         user.setUsername(username);
         user.setPassword(password);
         user.setEmail(email);
-        user.setRole(USER.name());
+        user.setRole(ERole.ROLE_USER);
 
         User savedUser = userService.saveUser(user);
         if (savedUser != null) {
