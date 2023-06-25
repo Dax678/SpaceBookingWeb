@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import AuthService from "./../../services/auth.service";
-import BookingListService from "./../../services/bookingList.service";
+import BookingListService from "../../services/accInformations.service";
 
 function BookingListPage() {
     const [reservations, setReservations] = useState([]);
@@ -11,7 +10,7 @@ function BookingListPage() {
     useEffect(() => {
         const user = AuthService.getCurrentUser();
 
-      const fetchReservations = async () => {
+        const fetchReservations = async () => {
         try {
         const response = await BookingListService.getBookingList(user.id);
         //Zapis posortowanych danych do zmiennej

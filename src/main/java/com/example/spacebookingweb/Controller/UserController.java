@@ -2,6 +2,7 @@ package com.example.spacebookingweb.Controller;
 
 import com.example.spacebookingweb.Database.Entity.ERole;
 import com.example.spacebookingweb.Database.Entity.User;
+import com.example.spacebookingweb.Database.View.UserInformationView;
 import com.example.spacebookingweb.Database.View.UserReservationView;
 import com.example.spacebookingweb.Service.ReservationService;
 import com.example.spacebookingweb.Service.UserService;
@@ -22,7 +23,7 @@ public class UserController {
     ReservationService reservationService;
 
     //Get user by id
-    @GetMapping("/api/getUserById/{id}")
+    @GetMapping("/api/user/getById/{id}")
     @Operation(
             summary = "Get user information by ID",
             description = "Get user information by ID. It returns ResponseEntity<User>",
@@ -32,7 +33,6 @@ public class UserController {
             }
     )
     public ResponseEntity<User> getUserById(
-//            @ApiParam(value = "User ID", required = true)
             @PathVariable("id") Long id) {
         System.out.println(id);
         User user = userService.getUserById(id);
@@ -52,7 +52,7 @@ public class UserController {
                     @ApiResponse(responseCode = "404", description = "User not found")
             }
     )
-    @GetMapping("/api/getUserByUsername/{username}")
+    @GetMapping("/api/user/getByUsername/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable("username") String username) {
         System.out.println(username);
         User user = userService.getUserByUsername(username);
@@ -72,7 +72,7 @@ public class UserController {
                     @ApiResponse(responseCode = "404", description = "Reservation not found")
             }
     )
-    @GetMapping("/api/getReservationByUserId/{id}")
+    @GetMapping("/api/user/getReservation/{id}")
     public ResponseEntity<List<UserReservationView>> getReservationByUserId(@PathVariable("id") Long id) {
         List<UserReservationView> reservationList = reservationService.getReservationByUserId(id);
 
@@ -91,7 +91,7 @@ public class UserController {
                     @ApiResponse(responseCode = "404", description = "Reservation not found")
             }
     )
-    @GetMapping("/api/getActiveReservationByUserId/{id}")
+    @GetMapping("/api/user/getActiveReservation/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<List<UserReservationView>> getActiveReservationByUserId(@PathVariable("id") Long id) {
         List<UserReservationView> reservationList = reservationService.getActiveReservationByUserId(id);
@@ -112,7 +112,7 @@ public class UserController {
             }
     )
 
-    @RequestMapping(value = "/api/addUser", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/user/add", method = RequestMethod.POST)
     public ResponseEntity<String> addUser(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password, @RequestParam(value = "email") String email) {
         User user = new User();
 
@@ -127,5 +127,25 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving user.");
         }
+    }
+
+    @Operation(
+            summary = "Get user active reservations by userId",
+            description = "Get user active reservations by userId. It returns ResponseEntity<List<Reservation>>",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "User active reservations"),
+                    @ApiResponse(responseCode = "404", description = "Reservation not found")
+            }
+    )
+    @GetMapping("/api/user/getInformation/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<List<UserInformationView>> getUserInformationByUserId(@PathVariable("id") Long id) {
+        List<UserInformationView> reservationList = userService.getUserInformationByUserId(id);
+
+        if (reservationList.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(reservationList);
     }
 }

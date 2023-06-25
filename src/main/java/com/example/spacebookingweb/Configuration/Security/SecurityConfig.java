@@ -67,7 +67,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/api/test/all").permitAll()
-                                .requestMatchers("/api/test/user", "/api/getActiveReservationByUserId/**").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/api/test/user").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers(
+                                        "/api/reservation/add",
+                                        "/api/user/getActiveReservation/**"
+                                ).hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/api/test/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );

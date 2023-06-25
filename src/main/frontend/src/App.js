@@ -16,7 +16,6 @@ import NoPage from './components/Page/NoPage';
 
 import AuthService from "./services/auth.service";
 import EventBus from "./common/EventBus";
-import Navbar from './components/Navbar';
 
 function App() {
   // const [showModeratorBoard, setShowModeratorBoard] = useState(false);

@@ -2,6 +2,8 @@ package com.example.spacebookingweb.Service;
 
 import com.example.spacebookingweb.Database.Entity.User;
 import com.example.spacebookingweb.Database.Entity.UserDetails;
+import com.example.spacebookingweb.Database.View.UserInformationView;
+import com.example.spacebookingweb.Database.View.UserReservationView;
 import com.example.spacebookingweb.Repository.UserDetailsRepository;
 import com.example.spacebookingweb.Repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -30,5 +32,9 @@ public class UserService {
 
     public User saveUser(User user) {
         return userRepository.save(user);
+    }
+
+    public List<UserInformationView> getUserInformationByUserId(Long id) {
+        return userRepository.findUserInformationByUserId(id);
     }
 }

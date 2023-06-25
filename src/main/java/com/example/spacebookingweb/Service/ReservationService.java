@@ -28,11 +28,12 @@ public class ReservationService {
         return reservationRepository.findActiveReservationByUserId(id);
     }
 
-    public Reservation saveReservation(Long user_id, Long space_id, LocalDate reservation_date) {
+    public Reservation saveReservation(Long user_id, Long space_id, LocalDate reservation_date, Boolean reservation_status) {
         Reservation reservation = new Reservation();
         reservation.setUser_id(user_id);
         reservation.setSpace_id(space_id);
         reservation.setReservation_date(reservation_date);
+        reservation.setReservation_status(reservation_status);
         return reservationRepository.save(reservation);
     }
 

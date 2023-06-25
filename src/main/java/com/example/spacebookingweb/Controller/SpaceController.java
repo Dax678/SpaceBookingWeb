@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 public class SpaceController {
     SpaceService spaceService;
 
@@ -27,7 +29,7 @@ public class SpaceController {
                     @ApiResponse(responseCode = "404", description = "Space not found")
             }
     )
-    @GetMapping("/api/getSpaceList")
+    @GetMapping("/api/space")
     public ResponseEntity<List<Space>> getAll() {
         List<Space> spaceList= spaceService.getAll();
 
@@ -46,7 +48,7 @@ public class SpaceController {
                     @ApiResponse(responseCode = "404", description = "Space not found")
             }
     )
-    @GetMapping("/api/getSpaceById/{id}")
+    @GetMapping("/api/space/{id}")
     public ResponseEntity<Space> getSpaceById(
             @PathVariable("id") Long id) {
         System.out.println(id);
@@ -67,7 +69,7 @@ public class SpaceController {
                     @ApiResponse(responseCode = "404", description = "Space not found")
             }
     )
-    @GetMapping("/api/getSpaceByType/{type}")
+    @GetMapping("/api/space/getByType/{type}")
     public ResponseEntity<List<Space>> getSpaceByType(
             @PathVariable("type") String type) {
         System.out.println(type);
@@ -88,7 +90,7 @@ public class SpaceController {
                     @ApiResponse(responseCode = "404", description = "Space not found")
             }
     )
-    @GetMapping("/api/getSpaceByHeightAdjustable/{bool}")
+    @GetMapping("/api/space/getByHeightAdjustable/{bool}")
     public ResponseEntity<List<Space>> getSpaceByHeightAdjustable(
             @PathVariable("bool") Boolean bool) {
         System.out.println(bool);
@@ -109,7 +111,7 @@ public class SpaceController {
                     @ApiResponse(responseCode = "404", description = "Space not found")
             }
     )
-    @GetMapping("/api/getSpacesByFloorIdAndType/{id}/{type}/{date}")
+    @GetMapping("/api/space/getByFloorIdAndType/{id}/{type}/{date}")
     public ResponseEntity<List<Space>> getSpacesByFloorIdAndType(@PathVariable Long id, @PathVariable String type, @PathVariable LocalDate date) {
         List<Space> spaceList = spaceService.getSpacesByFloorIdAndType(id, type, date);
 

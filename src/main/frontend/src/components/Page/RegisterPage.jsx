@@ -110,49 +110,52 @@ const RegisterPage = () => {
                         <div className="col">
                             <div className="p-5">
                                 <div className="text-center">
-                                    <h4 className="text-dark mb-4">Logowanie</h4>
+                                    <h1 className="text-dark mb-4">Rejestracja</h1>
                                 </div>
                                 <Form className="userRegisterForm" onSubmit={handleRegister} ref={form}>
                                 {!successful && (
                                   <div>
-                                    <div className="mb-3">
-                                        <label htmlFor="username">Username</label>
+                                    <div className="mb-3 text-center">
+                                        <label htmlFor="username" style={{ fontSize: '1.375rem' }}>Login</label>
                                         <input 
                                           type="text"
                                           name="username" 
-                                          className="form-control form-control-user" 
+                                          className="form-control form-control-user w-50 mx-auto rounded-5 pt-3 pb-3 mt-3" 
                                           placeholder="Wprowadź Login" 
                                           value={username}
                                           onChange={onChangeUsername}
                                           validations={[required, vusername]}
                                         />
                                     </div>
-                                    <div className="mb-3">
-                                        <label htmlFor="email">Email</label>
+                                    <div className="mb-3 text-center">
+                                        <label htmlFor="email" style={{ fontSize: '1.375rem' }}>Email</label>
                                         <input 
                                           type="email"
                                           name="email" 
-                                          className="form-control form-control-user" 
+                                          className="form-control form-control-user w-50 mx-auto rounded-5 pt-3 pb-3 mt-3" 
                                           placeholder="Wprowadź Address Email" 
                                           value={email}
                                           onChange={onChangeEmail}
                                           validations={[required, validEmail]}
                                         />
                                     </div>
-                                    <div className="mb-3">
-                                        <label htmlFor="password">Password</label>
+                                    <div className="mb-3 text-center">
+                                        <label htmlFor="password" style={{ fontSize: '1.375rem' }}>Hasło</label>
                                         <input 
                                           type="password"
                                           name="password" 
-                                          className="form-control form-control-user" 
+                                          className="form-control form-control-user w-50 mx-auto rounded-5 pt-3 pb-3 mt-3" 
                                           placeholder="Wprowadź Hasło" 
                                           value={password}
                                           onChange={onChangePassword}
                                           validations={[required, vpassword]}
                                         />
 
-                                        </div>
-                                    <button className="btn btn-primary d-block btn-user w-100">Potwierdź</button>
+                                    </div>
+                                    <div className="text-center">
+                                      <button className="btn btn-primary w-50 rounded-5 pt-2 pb-2 mt-3" style={{ fontSize: '1.375rem' }}>Stwórz konto</button>
+                                    </div>
+                                    <hr></hr>
                                   </div>
                                 )}
                                 {message && (
@@ -167,8 +170,12 @@ const RegisterPage = () => {
                                 )}
                                 <CheckButton style={{ display: "none" }} ref={checkBtn} />
                                 </Form>
-                                <div className="text-center"><a className="small">Nie pamiętam hasła</a></div>
-                                <div className="text-center"><a className="small">Posiadam już konto</a></div>
+                                <div className="text-center">
+                                  <h5><a className="small" href="/forgetPassword">Nie pamiętam hasła</a></h5>
+                                  </div>
+                                <div className="text-center">
+                                  <h5><a className="small" href="/login" >Posiadam już konto</a></h5>
+                                </div>
                             </div>
                         </div>
                     </div>

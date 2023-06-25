@@ -25,7 +25,7 @@ public class FloorController {
                     @ApiResponse(responseCode = "404", description = "Floor not found")
             }
     )
-    @GetMapping("/api/getFloorList")
+    @GetMapping("/api/floor")
     public ResponseEntity<List<Floor>> getAll() {
         List<Floor> floorList= floorService.getAll();
 
@@ -44,7 +44,7 @@ public class FloorController {
                     @ApiResponse(responseCode = "404", description = "Floor not found")
             }
     )
-    @GetMapping("/api/getFloorById/{id}")
+    @GetMapping("/api/floor/{id}")
     public ResponseEntity<Floor> getFloorById(
             @PathVariable("id") Long id) {
         System.out.println(id);
@@ -65,7 +65,7 @@ public class FloorController {
                     @ApiResponse(responseCode = "404", description = "Floor not found")
             }
     )
-    @GetMapping("/api/getFloorsByName/{type}")
+    @GetMapping("/api/floor/getByName/{type}")
     public ResponseEntity<Floor> getFloorsByName(
             @PathVariable("type") String type) {
         System.out.println(type);

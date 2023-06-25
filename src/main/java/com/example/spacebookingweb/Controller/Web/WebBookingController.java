@@ -51,16 +51,16 @@ public class WebBookingController {
         return "bookSpacePage";
     }
 
-    @PostMapping("/web/booking/{id}")
-    public void bookSpace(@PathVariable(value = "id") Long spaceId, @RequestParam("reservationDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate reservationDate) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = "nieznany użytkownik";
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails)principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
-
-        reservationService.saveReservation(userService.getUserByUsername(username).getId(), spaceId, reservationDate);
-    }
+//    @PostMapping("/web/booking/{id}")
+//    public void bookSpace(@PathVariable(value = "id") Long spaceId, @RequestParam("reservationDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate reservationDate) {
+//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        String username = "nieznany użytkownik";
+//        if (principal instanceof UserDetails) {
+//            username = ((UserDetails)principal).getUsername();
+//        } else {
+//            username = principal.toString();
+//        }
+//
+//        reservationService.saveReservation(userService.getUserByUsername(username).getId(), spaceId, reservationDate);
+//    }
 }

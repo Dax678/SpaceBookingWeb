@@ -27,6 +27,8 @@ public class UserDetails {
     private String address;
     @Column
     private String phoneNumber;
+    @Column(name = "profile_image")
+    private String profileImage;
 
     @JsonIgnoreProperties({"userDetails"})
     @JsonIgnore

@@ -2,17 +2,19 @@ package com.example.spacebookingweb.Controller;
 
 import com.example.spacebookingweb.Database.Entity.Reservation;
 import com.example.spacebookingweb.Service.ReservationService;
+import com.example.spacebookingweb.payload.request.BookingRequest;
+import com.example.spacebookingweb.payload.request.LoginRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 @RestController
 @AllArgsConstructor
@@ -28,7 +30,7 @@ public class ReservationController {
                     @ApiResponse(responseCode = "404", description = "Reservation not found")
             }
     )
-    @GetMapping("/api/getReservationById/{id}")
+    @GetMapping("/api/reservation/getById/{id}")
     public ResponseEntity<Reservation> getReservationById(
             @PathVariable("id") Long id) {
         System.out.println(id);
@@ -41,11 +43,12 @@ public class ReservationController {
         return ResponseEntity.ok(reservation);
     }
 
-    @PostMapping("/api/addReservation")
-    public ResponseEntity<String> addReservation(Long user_id, Long space_id, LocalDate date) {
+    @PostMapping("/api/reservation/add")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<String> addReservation(@Valid @RequestBody BookingRequest bookingRequest) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); //2023-05-04T10:30:00
 
-        Reservation reservation = reservationService.saveReservation(user_id, space_id, date);
+        Reservation reservation = reservationService.saveReservation(bookingRequest.getUser_id(), bookingRequest.getSpace_id(), bookingRequest.getDate(), bookingRequest.getReservation_status());
         if (reservation != null) {
             return ResponseEntity.ok("Reservation saved successfully.");
         } else {
@@ -53,7 +56,7 @@ public class ReservationController {
         }
     }
 
-    @DeleteMapping("/api/deleteReservation/{id}")
+    @DeleteMapping("/api/reservation/delete/{id}")
     public void deleteReservationById(@PathVariable Long id) {
         reservationService.deleteReservationById(id);
     }

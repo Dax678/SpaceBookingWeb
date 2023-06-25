@@ -23,7 +23,7 @@ public class UserDetailsController {
                     @ApiResponse(responseCode = "404", description = "User not found")
             }
     )
-    @GetMapping("/api/getUserDetailsById/{id}")
+    @GetMapping("/api/user/getDetails/{id}")
     public ResponseEntity<UserDetails> getUserDetailsById(@PathVariable("id") Long id) {
         System.out.println(id);
         UserDetails userDetails = userDetailsService.getUserDetailsById(id);

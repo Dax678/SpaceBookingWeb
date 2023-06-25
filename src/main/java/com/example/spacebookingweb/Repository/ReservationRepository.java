@@ -21,7 +21,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query(value = "SELECT view FROM UserReservationView view " +
             "WHERE view.user_id=:id " +
-            "AND view.reservation_date > current_date " +
+            "AND view.reservation_date >= current_date " +
             "AND view.reservation_status = true")
     List<UserReservationView> findActiveReservationByUserId(Long id);
 }
