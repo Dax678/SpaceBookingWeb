@@ -1,11 +1,12 @@
 # SpaceBookingWeb
 ## Home Page with expanded navigation (without logged user)
 
-![image](https://github.com/Dax678/SpaceBookingWeb/assets/97410688/98655bd1-400b-4ab1-9574-675f23321f8f)
+![HomePageWithExpandedNavigation](https://github.com/Dax678/SpaceBookingWeb/assets/97410688/c7367aee-3bd0-4fba-b121-62b0c94c1956)
 
 ## Login Page
 
-![image](https://github.com/Dax678/SpaceBookingWeb/assets/97410688/53a9b46d-d398-403c-b93e-cd9a2126a762)
+![loginPage](https://github.com/Dax678/SpaceBookingWeb/assets/97410688/40c31765-abe5-44b6-acff-fedcc773fb8c)
+
 
 ## Register Page
 
