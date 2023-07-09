@@ -37,8 +37,8 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    public void deleteReservationById(Long id) {
-        reservationRepository.deleteReservationById(id);
+    public void updateReservationStatus(Long user_id, Long reservation_id) {
+        reservationRepository.setReservationStatus(user_id, reservation_id, Boolean.FALSE);
     }
 
 }

@@ -70,7 +70,8 @@ public class SecurityConfig {
                                 .requestMatchers("/api/test/user").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers(
                                         "/api/reservation/add",
-                                        "/api/user/getActiveReservation/**"
+                                        "/api/user/getActiveReservation/**",
+                                        "/api/reservation/delete"
                                 ).hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/api/test/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()

@@ -3,6 +3,7 @@ package com.example.spacebookingweb.Controller;
 import com.example.spacebookingweb.Database.Entity.Reservation;
 import com.example.spacebookingweb.Service.ReservationService;
 import com.example.spacebookingweb.payload.request.BookingRequest;
+import com.example.spacebookingweb.payload.request.DeleteBookingRequest;
 import com.example.spacebookingweb.payload.request.LoginRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -56,8 +58,9 @@ public class ReservationController {
         }
     }
 
-    @DeleteMapping("/api/reservation/delete/{id}")
-    public void deleteReservationById(@PathVariable Long id) {
-        reservationService.deleteReservationById(id);
+    @PutMapping(value = "/api/reservation/delete")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public void removeReservation(@Validated @RequestBody DeleteBookingRequest deleteBookingRequest) {
+        reservationService.updateReservationStatus(deleteBookingRequest.getUser_id(), deleteBookingRequest.getReservation_id());
     }
 }

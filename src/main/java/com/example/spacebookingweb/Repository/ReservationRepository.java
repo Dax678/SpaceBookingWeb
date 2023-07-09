@@ -13,8 +13,9 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     Reservation findReservationById(Long id);
 
-    //TODO: Dodac usuwanie rezerwacji + zabezpiecznia
-    void deleteReservationById(Long id);
+    @Query(value = "UPDATE Reservation r SET r.reservation_status=:reservation_status " +
+            "WHERE r.user_id = :user_id AND r.id = :reservation_id")
+    void setReservationStatus(Long user_id, Long reservation_id, Boolean reservation_status);
 
     @Query(value = "SELECT view FROM UserReservationView view WHERE view.user_id=:id")
     List<UserReservationView> findReservationByUserId(Long id);
