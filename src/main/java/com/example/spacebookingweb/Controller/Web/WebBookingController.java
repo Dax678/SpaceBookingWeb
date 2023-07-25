@@ -36,13 +36,13 @@ public class WebBookingController {
 
     @GetMapping(value = "/web/booking")
     public String getWebReservationController(@RequestParam(value = "floorName", required = false, defaultValue = "Wybierz pietro") String floorName, @RequestParam(value = "spaceType", required = false) String spaceType, @RequestParam(value = "date", required = false, defaultValue = "") LocalDate date, Model model) {
-        model.addAttribute("floorList", floorService.getAll().getBody());
+        model.addAttribute("floorList", floorService.getFloorList().getBody());
         model.addAttribute("spaceList", spaceService.getAll().getBody());
         model.addAttribute("selectedFloor", floorName.substring(0, floorName.indexOf(" ")));
         model.addAttribute("selectedSpace", floorName.substring(0, floorName.indexOf(" ")));
         model.addAttribute("selectedDate", date);
 
-        Floor floor = floorService.getFloorsByName(floorName.substring(0, floorName.indexOf(" "))).getBody();
+        Floor floor = floorService.getFloorByName(floorName.substring(0, floorName.indexOf(" "))).getBody();
 
         if(floor != null) {
             model.addAttribute("results", spaceService.getSpacesByFloorIdAndType(floor.getId(), spaceType, date).getBody());

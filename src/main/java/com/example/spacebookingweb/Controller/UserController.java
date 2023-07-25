@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -32,16 +33,14 @@ public class UserController {
                     @ApiResponse(responseCode = "404", description = "User not found")
             }
     )
-    public ResponseEntity<User> getUserById(
-            @PathVariable("id") Long id) {
-        System.out.println(id);
-        User user = userService.getUserById(id);
+    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
+        Optional<User> optionalUser = userService.getUserById(id);
 
-        if (user == null) {
+        if (optionalUser.isPresent()) {
+            return ResponseEntity.ok(optionalUser.get());
+        } else {
             return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(user);
     }
 
     @Operation(
@@ -54,14 +53,13 @@ public class UserController {
     )
     @GetMapping("/api/user/getByUsername/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable("username") String username) {
-        System.out.println(username);
-        User user = userService.getUserByUsername(username);
+        Optional<User> optionalUser = userService.getUserByUsername(username);
 
-        if (user == null) {
+        if (optionalUser.isPresent()) {
+            return ResponseEntity.ok(optionalUser.get());
+        } else {
             return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(user);
     }
 
     @Operation(
@@ -76,11 +74,11 @@ public class UserController {
     public ResponseEntity<List<UserReservationView>> getReservationByUserId(@PathVariable("id") Long id) {
         List<UserReservationView> reservationList = reservationService.getReservationByUserId(id);
 
-        if (reservationList.isEmpty()) {
+        if (!reservationList.isEmpty()) {
+            return ResponseEntity.ok(reservationList);
+        } else {
             return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(reservationList);
     }
 
     @Operation(
@@ -96,11 +94,11 @@ public class UserController {
     public ResponseEntity<List<UserReservationView>> getActiveReservationByUserId(@PathVariable("id") Long id) {
         List<UserReservationView> reservationList = reservationService.getActiveReservationByUserId(id);
 
-        if (reservationList.isEmpty()) {
+        if (!reservationList.isEmpty()) {
+            return ResponseEntity.ok(reservationList);
+        } else {
             return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(reservationList);
     }
 
     @Operation(
@@ -111,8 +109,7 @@ public class UserController {
                     @ApiResponse(responseCode = "404", description = "Error saving user")
             }
     )
-
-    @RequestMapping(value = "/api/user/add", method = RequestMethod.POST)
+    @PostMapping(value = "/api/user/add")
     public ResponseEntity<String> addUser(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password, @RequestParam(value = "email") String email) {
         User user = new User();
 
@@ -142,10 +139,10 @@ public class UserController {
     public ResponseEntity<List<UserInformationView>> getUserInformationByUserId(@PathVariable("id") Long id) {
         List<UserInformationView> reservationList = userService.getUserInformationByUserId(id);
 
-        if (reservationList.isEmpty()) {
+        if (!reservationList.isEmpty()) {
+            return ResponseEntity.ok(reservationList);
+        } else {
             return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(reservationList);
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -31,13 +32,13 @@ public class SpaceController {
     )
     @GetMapping("/api/space")
     public ResponseEntity<List<Space>> getAll() {
-        List<Space> spaceList= spaceService.getAll();
+        List<Space> spaceList= spaceService.getSpaceList();
 
-        if (spaceList == null) {
+        if (!spaceList.isEmpty()) {
+            return ResponseEntity.ok(spaceList);
+        } else {
             return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(spaceList);
     }
 
     @Operation(
@@ -49,16 +50,14 @@ public class SpaceController {
             }
     )
     @GetMapping("/api/space/{id}")
-    public ResponseEntity<Space> getSpaceById(
-            @PathVariable("id") Long id) {
-        System.out.println(id);
-        Space space = spaceService.getSpaceById(id);
+    public ResponseEntity<Space> getSpaceById(@PathVariable("id") Long id) {
+       Optional<Space> optionalSpace = spaceService.getSpaceById(id);
 
-        if (space == null) {
+        if (optionalSpace.isPresent()) {
+            return ResponseEntity.ok(optionalSpace.get());
+        } else {
             return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(space);
     }
 
     @Operation(
@@ -70,16 +69,15 @@ public class SpaceController {
             }
     )
     @GetMapping("/api/space/getByType/{type}")
-    public ResponseEntity<List<Space>> getSpaceByType(
-            @PathVariable("type") String type) {
+    public ResponseEntity<List<Space>> getSpaceByType(@PathVariable("type") String type) {
         System.out.println(type);
         List<Space> spaceList = spaceService.getSpaceByType(type);
 
-        if (spaceList.isEmpty()) {
+        if (!spaceList.isEmpty()) {
+            return ResponseEntity.ok(spaceList);
+        } else {
             return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(spaceList);
     }
 
     @Operation(
@@ -91,16 +89,14 @@ public class SpaceController {
             }
     )
     @GetMapping("/api/space/getByHeightAdjustable/{bool}")
-    public ResponseEntity<List<Space>> getSpaceByHeightAdjustable(
-            @PathVariable("bool") Boolean bool) {
-        System.out.println(bool);
+    public ResponseEntity<List<Space>> getSpaceByHeightAdjustable(@PathVariable("bool") Boolean bool) {
         List<Space> spaceList = spaceService.getSpaceByHeightAdjustable(bool);
 
-        if (spaceList.isEmpty()) {
+        if (!spaceList.isEmpty()) {
+            return ResponseEntity.ok(spaceList);
+        } else {
             return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(spaceList);
     }
 
     @Operation(
@@ -115,10 +111,10 @@ public class SpaceController {
     public ResponseEntity<List<Space>> getSpacesByFloorIdAndType(@PathVariable Long id, @PathVariable String type, @PathVariable LocalDate date) {
         List<Space> spaceList = spaceService.getSpacesByFloorIdAndType(id, type, date);
 
-        if (spaceList.isEmpty()) {
+        if (!spaceList.isEmpty()) {
+            return ResponseEntity.ok(spaceList);
+        } else {
             return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(spaceList);
     }
 }

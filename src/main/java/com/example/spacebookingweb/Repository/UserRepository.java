@@ -7,11 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findUserById(Long id);
-    User findUserByUsername(String username);
+    Optional<User> findUserById(Long id);
+    Optional<User> findUserByUsername(String username);
 
     Boolean existsUserByUsername(String username);
 

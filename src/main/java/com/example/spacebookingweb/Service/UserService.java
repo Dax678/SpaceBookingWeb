@@ -13,6 +13,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -22,11 +23,11 @@ public class UserService {
     public List <User> getAllUsers() {
         return userRepository.findAll();
     }
-    public User getUserByUsername(String username) {
+    public Optional<User> getUserByUsername(String username) {
         return userRepository.findUserByUsername(username);
     }
 
-    public User getUserById(Long id) {
+    public Optional<User> getUserById(Long id) {
         return userRepository.findUserById(id);
     }
 

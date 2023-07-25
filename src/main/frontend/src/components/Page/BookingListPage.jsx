@@ -47,7 +47,7 @@ function BookingListPage() {
         const user = AuthService.getCurrentUser();
     
         setLoading(true);
-        bookingService.deleteBooking(user.id, reservation_id).then(
+        bookingService.changeBookingStatus("false", reservation_id).then(
           () => {
             navigate("/home");
             window.location.reload();

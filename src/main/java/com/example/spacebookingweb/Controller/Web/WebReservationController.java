@@ -35,7 +35,7 @@ public class WebReservationController {
 
         model.addAttribute("reservationList",
                 reservationService.getReservationByUserId(
-                        userService.getUserByUsername(username).getId())
+                        userService.getUserByUsername(username).get().getId())
                         .stream().sorted(Comparator.comparing(UserReservationView::getReservation_date))
                         .toList()
         );

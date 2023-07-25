@@ -8,18 +8,19 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class FloorService {
     FloorRepository floorRepository;
 
-    public Floor getFloorById(Long id) {
+    public Optional<Floor> getFloorById(Long id) {
         return floorRepository.findFloorById(id);
     }
 
-    public Floor getFloorsByName(String type) {
-        return floorRepository.findFloorsByName(type);
+    public Optional<Floor> getFloorByName(String type) {
+        return floorRepository.findFloorByName(type);
     }
 
     public List<Floor> getAll() {

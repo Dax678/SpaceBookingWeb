@@ -18,10 +18,9 @@ const bookSpace = (user_id, space_id, date, reservation_status) => {
     }, { headers: authHeader() });
   };
 
-const deleteBooking = (user_id, reservation_id) => {
-  return axios.put(API_URL + "reservation/delete", {
-    user_id,
-    reservation_id
+const changeBookingStatus = (bookingStatus, reservation_id) => {
+  return axios.put(API_URL + "reservation/" + reservation_id, {
+    bookingStatus
   }, { headers: authHeader() });
 };
 
@@ -29,7 +28,7 @@ const deleteBooking = (user_id, reservation_id) => {
 const bookingService = {
     getSpaceList,
     bookSpace,
-    deleteBooking
+    changeBookingStatus
 };
 
 export default bookingService;

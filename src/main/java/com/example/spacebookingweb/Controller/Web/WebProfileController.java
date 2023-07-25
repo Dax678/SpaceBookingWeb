@@ -32,7 +32,7 @@ public class WebProfileController {
         } else {
             username = principal.toString();
         }
-        Long userId = userService.getUserByUsername(username).getId();
+        Long userId = userService.getUserByUsername(username).get().getId();
 
         UserDetails userDetails = userDetailsController.getUserDetailsById(userId).getBody();
 
@@ -40,7 +40,7 @@ public class WebProfileController {
         model.addAttribute("surname", userDetails != null ? userDetails.getSurname() : "Brak ustawionego nazwiska");
         model.addAttribute("phoneNumber", userDetails != null ? userDetails.getPhoneNumber() : "Brak ustawionego numeru telefonu");
         model.addAttribute("address", userDetails != null ? userDetails.getAddress() : "Brak ustawionego adresu zamieszkania");
-        model.addAttribute("email", userService.getUserById(userId).getEmail());
+        model.addAttribute("email", userService.getUserById(userId).get().getEmail());
 
         return "profilePage";
     }

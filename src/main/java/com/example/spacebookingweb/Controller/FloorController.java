@@ -6,14 +6,17 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 public class FloorController {
     FloorService floorService;
 
@@ -26,14 +29,14 @@ public class FloorController {
             }
     )
     @GetMapping("/api/floor")
-    public ResponseEntity<List<Floor>> getAll() {
-        List<Floor> floorList= floorService.getAll();
+    public ResponseEntity<List<Floor>> getFloorList() {
+        List<Floor> floorList = floorService.getAll();
 
-        if (floorList == null) {
+        if (!floorList.isEmpty()) {
+            return ResponseEntity.ok(floorList);
+        } else {
             return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(floorList);
     }
 
     @Operation(
@@ -45,16 +48,15 @@ public class FloorController {
             }
     )
     @GetMapping("/api/floor/{id}")
-    public ResponseEntity<Floor> getFloorById(
-            @PathVariable("id") Long id) {
+    public ResponseEntity<Floor> getFloorById(@PathVariable("id") Long id) {
         System.out.println(id);
-        Floor floor = floorService.getFloorById(id);
+        Optional<Floor> optionalFloor = floorService.getFloorById(id);
 
-        if (floor == null) {
+        if (optionalFloor.isPresent()) {
+            return ResponseEntity.ok(optionalFloor.get());
+        } else {
             return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(floor);
     }
 
     @Operation(
@@ -66,15 +68,15 @@ public class FloorController {
             }
     )
     @GetMapping("/api/floor/getByName/{type}")
-    public ResponseEntity<Floor> getFloorsByName(
+    public ResponseEntity<Floor> getFloorByName(
             @PathVariable("type") String type) {
         System.out.println(type);
-        Floor floor = floorService.getFloorsByName(type);
+        Optional<Floor> optionalFloor = floorService.getFloorByName(type);
 
-        if (floor == null) {
+        if (optionalFloor.isPresent()) {
+            return ResponseEntity.ok(optionalFloor.get());
+        } else {
             return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(floor);
     }
 }

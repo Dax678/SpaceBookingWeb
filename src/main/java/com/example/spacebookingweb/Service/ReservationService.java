@@ -10,13 +10,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class ReservationService {
     ReservationRepository reservationRepository;
 
-    public Reservation getReservationById(Long id) {
+    public Optional<Reservation> getReservationById(Long id) {
         return reservationRepository.findReservationById(id);
     }
 
@@ -37,8 +38,8 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    public void updateReservationStatus(Long user_id, Long reservation_id) {
-        reservationRepository.setReservationStatus(user_id, reservation_id, Boolean.FALSE);
+    public void updateReservationStatus(Reservation reservation) {
+        reservationRepository.save(reservation);
     }
 
 }

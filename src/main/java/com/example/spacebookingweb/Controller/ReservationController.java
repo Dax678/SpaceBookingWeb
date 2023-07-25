@@ -3,8 +3,6 @@ package com.example.spacebookingweb.Controller;
 import com.example.spacebookingweb.Database.Entity.Reservation;
 import com.example.spacebookingweb.Service.ReservationService;
 import com.example.spacebookingweb.payload.request.BookingRequest;
-import com.example.spacebookingweb.payload.request.DeleteBookingRequest;
-import com.example.spacebookingweb.payload.request.LoginRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -12,11 +10,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -33,16 +30,14 @@ public class ReservationController {
             }
     )
     @GetMapping("/api/reservation/getById/{id}")
-    public ResponseEntity<Reservation> getReservationById(
-            @PathVariable("id") Long id) {
-        System.out.println(id);
-        Reservation reservation = reservationService.getReservationById(id);
+    public ResponseEntity<Reservation> getReservationById(@PathVariable("id") Long id) {
+        Optional<Reservation> optionalReservation = reservationService.getReservationById(id);
 
-        if (reservation == null) {
+        if (optionalReservation.isPresent()) {
+            return ResponseEntity.ok(optionalReservation.get());
+        } else {
             return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(reservation);
     }
 
     @PostMapping("/api/reservation/add")
@@ -58,9 +53,17 @@ public class ReservationController {
         }
     }
 
-    @PutMapping(value = "/api/reservation/delete")
+    @PutMapping(value = "/api/reservation/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public void removeReservation(@Validated @RequestBody DeleteBookingRequest deleteBookingRequest) {
-        reservationService.updateReservationStatus(deleteBookingRequest.getUser_id(), deleteBookingRequest.getReservation_id());
+    public ResponseEntity<Reservation> updateReservationStatus(@RequestBody String newStatus, @PathVariable(value = "id") Long reservationId) {
+        Optional<Reservation> optionalReservation = reservationService.getReservationById(reservationId);
+        if(optionalReservation.isPresent()) {
+            Reservation reservation = optionalReservation.get();
+            reservation.setReservation_status(Boolean.valueOf(newStatus));
+            reservationService.updateReservationStatus(reservation);
+            return ResponseEntity.ok(reservation);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
