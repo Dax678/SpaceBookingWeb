@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Form from "react-validation/build/form";
-import bookingService from '../../services/booking.service';
+import { Button, Container, Image, Modal } from 'react-bootstrap';
+
+import apiReservationService from '../../services/api-reservation.service';
 import AuthService from "./../../services/auth.service";
+import apiSpaceService from "./../../services/api-space.service";
 
 function BookingPage() {
+  const [showSuccessModal, setSuccessShowModal] = useState(false);
+  const [showFailureModal, setFailureShowModal] = useState(false);
+
   const [formData, setFormData] = useState({
-    floorName: '',
-    spaceType: '',
+    floorName: '1',
+    spaceType: 'Tech',
     date: '',
   });
   let navigate = useNavigate();
@@ -15,25 +21,24 @@ function BookingPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const [itemsPerPage] = useState(5);
-  // const indexOfLastItem = currentPage * itemsPerPage;
-  // const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  // var currentItems;
+  const location = useLocation();
+  const { floorNumber, date } = location.state || {};
 
   useEffect(() => {
-    const setDefaultValues = () => {
-      const defaultFormData = {
-        floorName: '1',
-        spaceType: 'Tech',
-        date: getCurrentDate(),
-      };
-      setFormData(defaultFormData);
-      //handleSearch();
-    };
-    setDefaultValues();
-    //console.log(formData);
-  }, []);
+    if (formData.floorName === "4" || formData.floorName === "5") {
+      setFormData((prevData) => ({
+        ...prevData,
+        spaceType: "Parking",
+        date: date || getCurrentDate(),
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        spaceType: "Tech",
+        date: date || getCurrentDate(),
+      }));
+    }
+  }, [floorNumber, date]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -42,14 +47,13 @@ function BookingPage() {
 
   const handleSearch = (event) => {
       event.preventDefault();
-      bookingService.getSpaceList(formData.floorName, formData.spaceType, formData.date)
+      apiSpaceService.getSpaceList(formData.floorName, formData.spaceType, formData.date, true)
       .then((response) => {
         setSpaces(response.data);
       })
       .catch((error) => {
         console.error('Błąd podczas pobierania miejsc:', error);
       });
-    // currentItems = spaces.slice(indexOfFirstItem, indexOfLastItem);
   };
 
   const handleBooking = (event, spaceId) => {
@@ -58,12 +62,13 @@ function BookingPage() {
 
     setLoading(true);
 
-    bookingService.bookSpace(user.id, spaceId, formData.date, true).then(
+    apiReservationService.bookSpace(user.id, spaceId, formData.date, true).then(
       () => {
-        navigate("/home");
-        window.location.reload();
+        setSuccessShowModal(true);
       },
       (error) => {
+        setFailureShowModal(true);
+
         const resMessage =
           (error.response &&
             error.response.data &&
@@ -77,18 +82,46 @@ function BookingPage() {
     );
   };
 
+  const handleFloorPageChange = () => {
+    navigate(`/booking/map?floorId=${formData.floorName}&date=${formData.date}`, {
+      state: {
+        floorId: formData.floorName,
+        date: formData.date,
+      },
+    });
+  }
+
+  const handleCloseModal = () => {
+    setSuccessShowModal(false);
+    window.location.reload();
+  };
+
+  const handleNavigationReservationListPage = () => {
+    setSuccessShowModal(false);
+    navigate("/bookingList");
+    window.location.reload();
+  }
+
+  const handleFailure = () => {
+    window.location.reload();
+  }
+
   const getCurrentDate = () => {
     const dateObj = new Date();
     const formattedDate = dateObj.toISOString().substr(0, 10); // Format: YYYY-MM-DD
     return formattedDate;
   };
 
-    // Zmienia stronę
-    // const paginate = (pageNumber) => {
-    // setCurrentPage(pageNumber);
-    // };
+  const availableSpaceTypes = {
+    '1': ['Tech', 'Standard'],
+    '2': ['Tech', 'Standard'],
+    '3': ['Tech', 'Standard'],
+    '4': ['Parking'],
+    '5': ['Parking'],
+  };
 
 return (
+  <Container>
   <div>
     <h3 className="text-dark mb-4 text-center">Rezerwuj Miejsce</h3>
     <div className="card shadow">
@@ -123,9 +156,13 @@ return (
                     value={formData.spaceType}
                     onChange={handleInputChange}
                   >
-                      <option value="Tech">Tech</option>
-                      <option value="Standard">Standard</option>
-                      <option value="Parking">Parking</option>
+                    {availableSpaceTypes[formData.floorName] ? (
+                      availableSpaceTypes[formData.floorName].map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      ))
+                    ) : null}
                   </select>
                 </p>
                 <p>
@@ -140,8 +177,18 @@ return (
                     required 
                   />
                 </p>
-                <button className="d-flex justify-content-center btn btn-primary d-block btn-user w-50" type="submit">Potwierdź</button>
+                <button 
+                  className="d-flex justify-content-center btn btn-primary d-block btn-user w-100" 
+                  type="submit">
+                    Znajdź Wolne Miejsce
+                </button>
               </Form>
+              <button 
+                  className="d-flex justify-content-center btn btn-primary d-block btn-user w-100 mt-5" 
+                  type="button"
+                  onClick={handleFloorPageChange}>
+                    Wyświetl Plan Piętra
+                </button>
             </div>
           </div>
           <div className="col-md-8">
@@ -164,9 +211,17 @@ return (
                       <td>{space.monitorNumber ? 'Tak' : 'Nie'}</td>
                       <td>{space.heightAdjustable}</td>
                       <td>
-                      <Form className="form" onSubmit={(event) => handleBooking(event, space.id)}>
-                        <button className="btn btn-primary d-block btn-user w-100" type="submit" data-bs-toggle="modal" data-bs-target="#successModal">Rezerwuj</button>
-                      </Form>
+                      <button 
+                        className="btn btn-primary d-block btn-user w-100" 
+                        type="submit" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#successModal"
+                        onClick={(event) => {
+                          handleBooking(event, space.id);
+                          setSuccessShowModal(true);
+                        }}
+                      >
+                          Rezerwuj</button>
                     </td>
                     </tr>
                   ))}
@@ -177,33 +232,37 @@ return (
         </div>
       </div>
     </div>
-    {message && (
-                      <div className="form-group">
-                        <div className="alert alert-danger" role="alert">
-                          {message}
-                        </div>
-                      </div>
-                    )}
-    <div className="modal fade" id="successModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-      <div className="modal-dialog">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title" id="staticBackdropLabel">Modal title</h5>
-            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div className="modal-body">
-            <p>
-                Rezerwacja zakończyła się pomyślnie!
-            </p>
-          </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
-            <button type="button" className="btn btn-primary">Wyświetl wszystkie rezerwacje</button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
+  <Modal show={showSuccessModal} onHide={handleCloseModal}>
+      <Modal.Header closeButton>
+          <Modal.Title>Success Reservation</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+          Your reservation has been saved.
+      </Modal.Body>
+      <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+          Close
+          </Button>
+          <Button variant="primary" onClick={handleNavigationReservationListPage}>
+          Go to Reservation List Page
+          </Button>
+      </Modal.Footer>
+  </Modal>
+  <Modal show={showFailureModal} onHide={handleFailure}>
+        <Modal.Header closeButton>
+          <Modal.Title>Failure Reservation</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Something goes wrong. Please reload the page.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleFailure}>
+            Refresh Page
+          </Button>
+        </Modal.Footer>
+      </Modal>
+  </Container>
 );
 };
   

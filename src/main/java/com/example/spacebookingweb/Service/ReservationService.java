@@ -3,6 +3,7 @@ package com.example.spacebookingweb.Service;
 import com.example.spacebookingweb.Database.Entity.Reservation;
 import com.example.spacebookingweb.Database.View.UserReservationView;
 import com.example.spacebookingweb.Repository.ReservationRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,11 +26,22 @@ public class ReservationService {
         return reservationRepository.findReservationByUserId(id);
     }
 
-    public List<UserReservationView> getActiveReservationByUserId(Long id) {
-        return reservationRepository.findActiveReservationByUserId(id);
+    public List<UserReservationView> getUserReservationListByStatus(Long id, Boolean bool) {
+        return reservationRepository.findUserReservationListByStatus(id, bool);
     }
 
+    public Boolean checkSpaceStatus(Long id, LocalDate date) {
+        Optional<Reservation> reservationOptional = reservationRepository.findReservationBySpaceIdAndReservationDate(id, date);
+
+        return reservationOptional.isPresent();
+    }
+
+    @Transactional
     public Reservation saveReservation(Long user_id, Long space_id, LocalDate reservation_date, Boolean reservation_status) {
+        if(checkSpaceStatus(space_id, reservation_date)) {
+            return null;
+        }
+
         Reservation reservation = new Reservation();
         reservation.setUser_id(user_id);
         reservation.setSpace_id(space_id);
@@ -38,8 +50,12 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
+    @Transactional
     public void updateReservationStatus(Reservation reservation) {
         reservationRepository.save(reservation);
     }
 
+    public List<Reservation> getReservationsByFloorIdAndDate(Long floorId, LocalDate date) {
+        return reservationRepository.findReservationByFloorIdAndReservationDate(floorId, date);
+    }
 }

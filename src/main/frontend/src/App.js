@@ -9,6 +9,7 @@ import RegisterPage from './components/Page/RegisterPage';
 import HomePage from './components/Page/HomePage';
 import LandingPage from './components/Page/LandingPage';
 import BookingPage from './components/Page/BookingPage';
+import BookingMapPage from './components/Page/BookingMapPage';
 import BookingListPage from './components/Page/BookingListPage';
 import ProfilePage from './components/Page/ProfilePage';
 import FindColleaguePage from './components/Page/FindColleaguePage';
@@ -139,6 +140,7 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/bookingList" element={<BookingListPage />} />
           <Route path="/booking" element={<BookingPage />} />
+          <Route path="/booking/map" element={<BookingMapPage />} />
           {/* <Route path="/findColleague" element={<FindColleaguePage />} /> */}
           {/* <Route path="/profile" element={<ProfilePage />} /> */}
           <Route path="*" element={<NoPage />} />

@@ -13,65 +13,62 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/api/user")
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 public class UserController {
     UserService userService;
     ReservationService reservationService;
 
     //Get user by id
-    @GetMapping("/api/user/getById/{id}")
+    @GetMapping("/{id}")
     @Operation(
-            summary = "Get user information by ID",
-            description = "Get user information by ID. It returns ResponseEntity<User>",
+            summary = "Get user information by userId",
+            description = "Get user information by userId",
             responses = {
                     @ApiResponse(responseCode = "200", description = "User info"),
                     @ApiResponse(responseCode = "404", description = "User not found")
             }
     )
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
         Optional<User> optionalUser = userService.getUserById(id);
 
-        if (optionalUser.isPresent()) {
-            return ResponseEntity.ok(optionalUser.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return optionalUser.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Operation(
             summary = "Get user information by username",
-            description = "Get user information by username. It returns ResponseEntity<User>",
+            description = "Get user information by username",
             responses = {
                     @ApiResponse(responseCode = "200", description = "User info"),
                     @ApiResponse(responseCode = "404", description = "User not found")
             }
     )
-    @GetMapping("/api/user/getByUsername/{username}")
+    @GetMapping("/name/{username}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<User> getUserByUsername(@PathVariable("username") String username) {
         Optional<User> optionalUser = userService.getUserByUsername(username);
 
-        if (optionalUser.isPresent()) {
-            return ResponseEntity.ok(optionalUser.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return optionalUser.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Operation(
             summary = "Get user reservations by userId",
-            description = "Get user reservations by userId. It returns ResponseEntity<List<Reservation>>",
+            description = "Get user reservations by userId",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "User reservations"),
-                    @ApiResponse(responseCode = "404", description = "Reservation not found")
+                    @ApiResponse(responseCode = "200", description = "User reservation list"),
+                    @ApiResponse(responseCode = "404", description = "User reservations not found")
             }
     )
-    @GetMapping("/api/user/getReservation/{id}")
-    public ResponseEntity<List<UserReservationView>> getReservationByUserId(@PathVariable("id") Long id) {
+    @GetMapping("/{id}/reservations")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<List<UserReservationView>> getUserReservationList(@PathVariable("id") Long id) {
         List<UserReservationView> reservationList = reservationService.getReservationByUserId(id);
 
         if (!reservationList.isEmpty()) {
@@ -82,17 +79,18 @@ public class UserController {
     }
 
     @Operation(
-            summary = "Get user active reservations by userId",
-            description = "Get user active reservations by userId. It returns ResponseEntity<List<Reservation>>",
+            summary = "Get user reservation list by reservation status",
+            description = "Get user reservation list by reservation status",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "User active reservations"),
-                    @ApiResponse(responseCode = "404", description = "Reservation not found")
+                    @ApiResponse(responseCode = "200", description = "User reservation list"),
+                    @ApiResponse(responseCode = "404", description = "User reservations not found")
             }
     )
-    @GetMapping("/api/user/getActiveReservation/{id}")
+    @GetMapping("/{id}/reservations/{status}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<List<UserReservationView>> getActiveReservationByUserId(@PathVariable("id") Long id) {
-        List<UserReservationView> reservationList = reservationService.getActiveReservationByUserId(id);
+    public ResponseEntity<List<UserReservationView>> getUserReservationListByStatus(@PathVariable("id") Long id,
+                                                                                  @PathVariable("status") Boolean status) {
+        List<UserReservationView> reservationList = reservationService.getUserReservationListByStatus(id, status);
 
         if (!reservationList.isEmpty()) {
             return ResponseEntity.ok(reservationList);
@@ -109,7 +107,7 @@ public class UserController {
                     @ApiResponse(responseCode = "404", description = "Error saving user")
             }
     )
-    @PostMapping(value = "/api/user/add")
+    @PostMapping
     public ResponseEntity<String> addUser(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password, @RequestParam(value = "email") String email) {
         User user = new User();
 
@@ -119,6 +117,7 @@ public class UserController {
         user.setRole(ERole.ROLE_USER);
 
         User savedUser = userService.saveUser(user);
+
         if (savedUser != null) {
             return ResponseEntity.ok("User saved successfully.");
         } else {
@@ -134,13 +133,13 @@ public class UserController {
                     @ApiResponse(responseCode = "404", description = "Reservation not found")
             }
     )
-    @GetMapping("/api/user/getInformation/{id}")
+    @GetMapping("/{id}/details")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<List<UserInformationView>> getUserInformationByUserId(@PathVariable("id") Long id) {
-        List<UserInformationView> reservationList = userService.getUserInformationByUserId(id);
+    public ResponseEntity<UserInformationView> getUserInformations(@PathVariable("id") Long id) {
+        Optional<UserInformationView> userInformationViewOptional = userService.getUserInformationByUserId(id);
 
-        if (!reservationList.isEmpty()) {
-            return ResponseEntity.ok(reservationList);
+        if(userInformationViewOptional.isPresent()) {
+            return userInformationViewOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
         } else {
             return ResponseEntity.notFound().build();
         }

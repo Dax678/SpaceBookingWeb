@@ -6,6 +6,7 @@ import com.example.spacebookingweb.Database.View.UserInformationView;
 import com.example.spacebookingweb.Database.View.UserReservationView;
 import com.example.spacebookingweb.Repository.UserDetailsRepository;
 import com.example.spacebookingweb.Repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -31,11 +32,12 @@ public class UserService {
         return userRepository.findUserById(id);
     }
 
+    @Transactional
     public User saveUser(User user) {
         return userRepository.save(user);
     }
 
-    public List<UserInformationView> getUserInformationByUserId(Long id) {
+    public Optional<UserInformationView> getUserInformationByUserId(Long id) {
         return userRepository.findUserInformationByUserId(id);
     }
 }

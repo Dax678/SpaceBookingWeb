@@ -30,7 +30,7 @@ public class SpaceService {
         return spaceRepository.findSpaceByHeightAdjustable(bool);
     }
 
-    public List<Space> getSpacesByFloorIdAndType(Long floor_id, String type, LocalDate date) {
-        return spaceRepository.findSpacesByFloor_idAndType(floor_id, type, date);
+    public List<Space> getSpacesByFloorIdAndType(Long floor_id, String type, LocalDate date, Boolean bool) {
+        return spaceRepository.findSpacesByFloor_idAndType(floor_id, type, date, bool);
     }
 }

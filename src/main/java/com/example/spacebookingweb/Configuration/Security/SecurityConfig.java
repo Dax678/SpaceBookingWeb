@@ -69,9 +69,26 @@ public class SecurityConfig {
                                 .requestMatchers("/api/test/all").permitAll()
                                 .requestMatchers("/api/test/user").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers(
-                                        "/api/reservation/add",
-                                        "/api/user/getActiveReservation/**",
-                                        "/api/reservation/**"
+                                        //API FLOOR
+                                        "/api/floor",
+                                        "/api/floor/{id}",
+                                        "/api/floor/{id}/reservations/{date}",
+                                        //API SPACE
+                                        "/api/space",
+                                        "/api/space/{id}",
+                                        "/api/space/type/{type}",
+                                        "/api/space/heightAdjustable/{bool}",
+                                        "/api/space/{id}/{type}/{date}/{status}",
+                                        // API RESERVATION
+                                        "/api/reservation",
+                                        "/api/reservation/{id}",
+                                        //API USER
+                                        "/api/user",
+                                        "/api/user/{id}",
+                                        "/api/user/name/{username}",
+                                        "/api/user/{id}/reservations",
+                                        "/api/user/{id}/reservations/{status}",
+                                        "/api/user/{id}/details"
                                 ).hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/api/test/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()

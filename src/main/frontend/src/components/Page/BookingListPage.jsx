@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Button, Container, Image, Modal } from 'react-bootstrap';
+
 import Form from "react-validation/build/form";
-import bookingService from '../../services/booking.service';
+
+import apiReservationService from '../../services/api-reservation.service';
 import AuthService from "./../../services/auth.service";
-import BookingListService from "../../services/accInformations.service";
+import apiUserService from "../../services/api-user.service";
 
 function BookingListPage() {
+    const [showConfirmationModal, setConfirmationShowModal] = useState(false);
+    const [showSuccessModal, setSuccessShowModal] = useState(false);
+    const [deleteReservationInfo, setDeleteReservationInfo] = useState();
     const [reservations, setReservations] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5);
@@ -19,7 +25,7 @@ function BookingListPage() {
 
         const fetchReservations = async () => {
             try {
-                const response = await BookingListService.getBookingList(user.id);
+                const response = await apiUserService.getUserReservations(user.id, true);
                 //console.log(response);
                 //Zapis posortowanych danych do zmiennej
                 setReservations(response.data.sort((a, b) => {
@@ -47,10 +53,10 @@ function BookingListPage() {
         const user = AuthService.getCurrentUser();
     
         setLoading(true);
-        bookingService.changeBookingStatus("false", reservation_id).then(
+        apiReservationService.changeBookingStatus("false", deleteReservationInfo).then(
           () => {
-            navigate("/home");
-            window.location.reload();
+            setConfirmationShowModal(false);
+            setSuccessShowModal(true);
           },
           (error) => {
             const resMessage =
@@ -66,8 +72,24 @@ function BookingListPage() {
         );
       };
 
+      const handleCloseModal = () => {
+        setConfirmationShowModal(false);
+      };
+
+      const handleNavigationHomePage = () => {
+        setConfirmationShowModal(false);
+        navigate("/home");
+        window.location.reload();
+      }
+    
+      const handleNavigationReloadPage = () => {
+        setConfirmationShowModal(false);
+        window.location.reload();
+      }
+
     return (
-        <div>
+        <Container>
+            <div>
             <h3 className="text-dark mb-4 text-center">Moje rezerwacje</h3>
             <div className="card shadow">
                 <div className="card-header py-3">
@@ -104,9 +126,18 @@ function BookingListPage() {
                                         <td>{reservation.height_adjustable ? 'Tak' : 'Nie'}</td>
                                         <td>{reservation.reservation_date}</td>
                                         <td>
-                                            <Form className="form" onSubmit={(event) => handleDeleteBooking(event, reservation.reservation_id)}>
-                                                <button className="btn btn-primary d-block btn-user w-100" type="submit" data-bs-toggle="modal" data-bs-target="#successModal">Anuluj rezerwacje</button>
-                                            </Form>
+                                            <button 
+                                            className="btn btn-primary d-block btn-user w-100" 
+                                            type="submit" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#successModal"
+                                            onClick={() => {
+                                                setDeleteReservationInfo(reservation.reservation_id);
+                                                setConfirmationShowModal(true);
+                                            }}
+                                            >
+                                                Anuluj rezerwacje
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
@@ -141,6 +172,40 @@ function BookingListPage() {
                 </div>
             </div>
         </div>
+        <Modal show={showConfirmationModal} onHide={handleCloseModal}>
+            <Modal.Header closeButton>
+            <Modal.Title>Confirm Reservation</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                Are you sure you want to delete your booking?
+            </Modal.Body>
+            <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseModal}>
+                Cancel
+            </Button>
+            <Button variant="primary" onClick={handleDeleteBooking}>
+                Delete Booking
+            </Button>
+            </Modal.Footer>
+        </Modal>
+
+        <Modal show={showSuccessModal} onHide={handleNavigationReloadPage}>
+            <Modal.Header closeButton>
+                <Modal.Title>Deleted Reservation</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                Your reservation has been deleted.
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleNavigationHomePage}>
+                Go to Home Page
+                </Button>
+                <Button variant="primary" onClick={handleNavigationReloadPage}>
+                Close
+                </Button>
+            </Modal.Footer>
+        </Modal>
+        </Container>
     );
 };
   

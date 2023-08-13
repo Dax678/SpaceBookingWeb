@@ -1,0 +1,33 @@
+.floor-plan-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  .floor-plan-image {
+    width: 100%;
+    height: auto;
+  }
+  
+  .seat-button {
+    position: absolute;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .seat-button.open {
+    background-color: #329272;
+    border-color: #329272;
+    color: white;
+  }
+
+  .seat-button.selected {
+    background-color: red;
+    color: white;
+  }
+  
+  /* Dodaj dodatkowe style dla innych przycisków, dostosuj pozycje, kolory, itp. */
+  

@@ -1,16 +1,14 @@
 package com.example.spacebookingweb.Controller;
 
-import com.example.spacebookingweb.Database.Entity.Floor;
 import com.example.spacebookingweb.Database.Entity.Space;
 import com.example.spacebookingweb.Service.SpaceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,20 +16,22 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/api/space")
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 public class SpaceController {
     SpaceService spaceService;
 
     @Operation(
-            summary = "Get list of spaces",
-            description = "Get list of spaces",
+            summary = "Get space list",
+            description = "Get space list",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Space list"),
                     @ApiResponse(responseCode = "404", description = "Space not found")
             }
     )
-    @GetMapping("/api/space")
-    public ResponseEntity<List<Space>> getAll() {
+    @GetMapping
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<List<Space>> getSpaceList() {
         List<Space> spaceList= spaceService.getSpaceList();
 
         if (!spaceList.isEmpty()) {
@@ -49,15 +49,12 @@ public class SpaceController {
                     @ApiResponse(responseCode = "404", description = "Space not found")
             }
     )
-    @GetMapping("/api/space/{id}")
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Space> getSpaceById(@PathVariable("id") Long id) {
        Optional<Space> optionalSpace = spaceService.getSpaceById(id);
 
-        if (optionalSpace.isPresent()) {
-            return ResponseEntity.ok(optionalSpace.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return optionalSpace.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Operation(
@@ -68,8 +65,9 @@ public class SpaceController {
                     @ApiResponse(responseCode = "404", description = "Space not found")
             }
     )
-    @GetMapping("/api/space/getByType/{type}")
-    public ResponseEntity<List<Space>> getSpaceByType(@PathVariable("type") String type) {
+    @GetMapping("/type/{type}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<List<Space>> getSpaceListByType(@PathVariable("type") String type) {
         System.out.println(type);
         List<Space> spaceList = spaceService.getSpaceByType(type);
 
@@ -81,15 +79,16 @@ public class SpaceController {
     }
 
     @Operation(
-            summary = "Get list of spaces which have / don't have height adjustment",
-            description = "Get list of spaces which have / don't have height adjustment. ResponseEntity<List<Space>>",
+            summary = "Get space list by height adjustment",
+            description = "Get space list by height adjustment",
             responses = {
                     @ApiResponse(responseCode = "200", description = "List of spaces with height adjustment"),
                     @ApiResponse(responseCode = "404", description = "Space not found")
             }
     )
-    @GetMapping("/api/space/getByHeightAdjustable/{bool}")
-    public ResponseEntity<List<Space>> getSpaceByHeightAdjustable(@PathVariable("bool") Boolean bool) {
+    @GetMapping("/heightAdjustable/{bool}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<List<Space>> getSpaceListByHeightAdjustable(@PathVariable("bool") Boolean bool) {
         List<Space> spaceList = spaceService.getSpaceByHeightAdjustable(bool);
 
         if (!spaceList.isEmpty()) {
@@ -100,16 +99,20 @@ public class SpaceController {
     }
 
     @Operation(
-            summary = "Get list of spaces which have / don't have height adjustment",
-            description = "Get list of spaces which have / don't have height adjustment. ResponseEntity<List<Space>>",
+            summary = "Get",
+            description = "Get",
             responses = {
                     @ApiResponse(responseCode = "200", description = "List of spaces with height adjustment"),
                     @ApiResponse(responseCode = "404", description = "Space not found")
             }
     )
-    @GetMapping("/api/space/getByFloorIdAndType/{id}/{type}/{date}")
-    public ResponseEntity<List<Space>> getSpacesByFloorIdAndType(@PathVariable Long id, @PathVariable String type, @PathVariable LocalDate date) {
-        List<Space> spaceList = spaceService.getSpacesByFloorIdAndType(id, type, date);
+    @GetMapping("/{id}/{type}/{date}/{status}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<List<Space>> getSpaceListByFloorIdAndType(@PathVariable(value = "id") Long id,
+                                                                    @PathVariable(value = "type") String type,
+                                                                    @PathVariable(value = "date") LocalDate date,
+                                                                    @PathVariable(value = "status") Boolean status) {
+        List<Space> spaceList = spaceService.getSpacesByFloorIdAndType(id, type, date, status);
 
         if (!spaceList.isEmpty()) {
             return ResponseEntity.ok(spaceList);

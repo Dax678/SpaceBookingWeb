@@ -17,30 +17,36 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/api/reservation")
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 public class ReservationController {
     ReservationService reservationService;
 
     @Operation(
-            summary = "Get reservation information by ID",
-            description = "Get reservation information by ID. It returns ResponseEntity<Reservation>",
+            summary = "Get reservation information by reservationId",
+            description = "Get reservation information by reservationId",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Reservation information"),
                     @ApiResponse(responseCode = "404", description = "Reservation not found")
             }
     )
-    @GetMapping("/api/reservation/getById/{id}")
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Reservation> getReservationById(@PathVariable("id") Long id) {
         Optional<Reservation> optionalReservation = reservationService.getReservationById(id);
 
-        if (optionalReservation.isPresent()) {
-            return ResponseEntity.ok(optionalReservation.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return optionalReservation.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/api/reservation/add")
+    @Operation(
+            summary = "Add new reservation",
+            description = "Add new reservation",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Reservation saved"),
+                    @ApiResponse(responseCode = "404", description = "Error saving reservation")
+            }
+    )
+    @PostMapping
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<String> addReservation(@Valid @RequestBody BookingRequest bookingRequest) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); //2023-05-04T10:30:00
@@ -53,9 +59,18 @@ public class ReservationController {
         }
     }
 
-    @PutMapping(value = "/api/reservation/{id}")
+    @Operation(
+            summary = "Update reservation status",
+            description = "Update reservation status",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Reservation status updated"),
+                    @ApiResponse(responseCode = "404", description = "Error updating reservation status")
+            }
+    )
+    @PutMapping(value = "/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<Reservation> updateReservationStatus(@RequestBody String newStatus, @PathVariable(value = "id") Long reservationId) {
+    public ResponseEntity<Reservation> updateReservationStatus(@PathVariable(value = "id") Long reservationId,
+                                                               @RequestBody String newStatus) {
         Optional<Reservation> optionalReservation = reservationService.getReservationById(reservationId);
         if(optionalReservation.isPresent()) {
             Reservation reservation = optionalReservation.get();
