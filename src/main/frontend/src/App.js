@@ -4,6 +4,8 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 import 'bootstrap/dist/css/bootstrap.css';
 
+
+//Main site imports
 import LoginPage from './components/Page/LoginPage';
 import RegisterPage from './components/Page/RegisterPage';
 import HomePage from './components/Page/HomePage';
@@ -14,6 +16,12 @@ import BookingListPage from './components/Page/BookingListPage';
 import ProfilePage from './components/Page/ProfilePage';
 import FindColleaguePage from './components/Page/FindColleaguePage';
 import NoPage from './components/Page/NoPage';
+
+//Dashboards imports
+import DashboardHomePage from './components/Page/Admin Dashboard/DashboardHomePage';
+import DashboardBookingListPage from './components/Page/Admin Dashboard/DashboardBookingListPage';
+import DashboardSpaceListPage from './components/Page/Admin Dashboard/DashboardSpaceListPage';
+import DashboardReportsPage from './components/Page/Admin Dashboard/DashboardReportsPage';
 
 import AuthService from "./services/auth.service";
 import EventBus from "./common/EventBus";
@@ -54,13 +62,53 @@ function App() {
         <nav className="nav__cont">
         {currentUser ? (
           <ul className="nav">
+            {currentUser.roles.includes("ROLE_ADMIN") && (
+            <div>
               <li className="nav__items">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" className="icon" version="1.1">
-                      <path d="M981.4 502.3c-9.1 0-18.3-2.9-26-8.9L539 171.7c-15.3-11.8-36.7-11.8-52 0L70.7 493.4c-18.6 14.4-45.4 10.9-59.7-7.7-14.4-18.6-11-45.4 7.7-59.7L435 104.3c46-35.5 110.2-35.5 156.1 0L1007.5 426c18.6 14.4 22 41.1 7.7 59.7-8.5 10.9-21.1 16.6-33.8 16.6z" fill="#5F6379"/>
-                      <path d="M810.4 981.3H215.7c-70.8 0-128.4-57.6-128.4-128.4V534.2c0-23.5 19.1-42.6 42.6-42.6s42.6 19.1 42.6 42.6v318.7c0 23.8 19.4 43.2 43.2 43.2h594.8c23.8 0 43.2-19.4 43.2-43.2V534.2c0-23.5 19.1-42.6 42.6-42.6s42.6 19.1 42.6 42.6v318.7c-0.1 70.8-57.7 128.4-128.5 128.4z" fill="#3688FF"/>
-                  </svg>
-                  <Link to={"/home"}>Strona<br/>Główna</Link>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" className="icon" version="1.1">
+                  <path d="M981.4 502.3c-9.1 0-18.3-2.9-26-8.9L539 171.7c-15.3-11.8-36.7-11.8-52 0L70.7 493.4c-18.6 14.4-45.4 10.9-59.7-7.7-14.4-18.6-11-45.4 7.7-59.7L435 104.3c46-35.5 110.2-35.5 156.1 0L1007.5 426c18.6 14.4 22 41.1 7.7 59.7-8.5 10.9-21.1 16.6-33.8 16.6z" fill="#5F6379"/>
+                  <path d="M810.4 981.3H215.7c-70.8 0-128.4-57.6-128.4-128.4V534.2c0-23.5 19.1-42.6 42.6-42.6s42.6 19.1 42.6 42.6v318.7c0 23.8 19.4 43.2 43.2 43.2h594.8c23.8 0 43.2-19.4 43.2-43.2V534.2c0-23.5 19.1-42.6 42.6-42.6s42.6 19.1 42.6 42.6v318.7c-0.1 70.8-57.7 128.4-128.5 128.4z" fill="#3688FF"/>
+                </svg>
+              <Link to={"/dashboard/home"}>Strona<br/>Główna</Link>
               </li>
+              <li className="nav__items">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" className="icon" version="1.1">
+                  <path d="M981.3 170.7H320c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7h661.3c23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7zM981.3 938.7H320c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7h661.3c23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7zM981.3 554.7H320c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7h661.3c23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7z" fill="#3688FF"/>
+                  <path d="M106.7 128m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#5F6379"/>
+                  <path d="M106.7 512m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#5F6379"/>
+                  <path d="M106.7 896m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#5F6379"/>
+                </svg>
+              <Link to={"/dashboard/bookingList"}>Lista<br/>Rezerwacji</Link>
+              </li>
+              <li className="nav__items">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" className="icon" version="1.1">
+                  <path d="M981.3 170.7H320c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7h661.3c23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7zM981.3 938.7H320c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7h661.3c23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7zM981.3 554.7H320c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7h661.3c23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7z" fill="#3688FF"/>
+                  <path d="M106.7 128m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#5F6379"/>
+                  <path d="M106.7 512m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#5F6379"/>
+                  <path d="M106.7 896m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#5F6379"/>
+                </svg>
+              <Link to={"/dashboard/spaceList"}>Lista<br/>Miejsc</Link>
+              </li>
+              <li className="nav__items">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" className="icon" version="1.1">
+                  <path d="M981.3 170.7H320c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7h661.3c23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7zM981.3 938.7H320c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7h661.3c23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7zM981.3 554.7H320c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7h661.3c23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7z" fill="#3688FF"/>
+                  <path d="M106.7 128m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#5F6379"/>
+                  <path d="M106.7 512m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#5F6379"/>
+                  <path d="M106.7 896m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#5F6379"/>
+                </svg>
+              <Link to={"/dashboard/reports"}>Raporty</Link>
+              </li>
+            </div>
+            )}
+            {currentUser.roles.includes("ROLE_USER") && (
+              <div>
+                <li className="nav__items">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" className="icon" version="1.1">
+                        <path d="M981.4 502.3c-9.1 0-18.3-2.9-26-8.9L539 171.7c-15.3-11.8-36.7-11.8-52 0L70.7 493.4c-18.6 14.4-45.4 10.9-59.7-7.7-14.4-18.6-11-45.4 7.7-59.7L435 104.3c46-35.5 110.2-35.5 156.1 0L1007.5 426c18.6 14.4 22 41.1 7.7 59.7-8.5 10.9-21.1 16.6-33.8 16.6z" fill="#5F6379"/>
+                        <path d="M810.4 981.3H215.7c-70.8 0-128.4-57.6-128.4-128.4V534.2c0-23.5 19.1-42.6 42.6-42.6s42.6 19.1 42.6 42.6v318.7c0 23.8 19.4 43.2 43.2 43.2h594.8c23.8 0 43.2-19.4 43.2-43.2V534.2c0-23.5 19.1-42.6 42.6-42.6s42.6 19.1 42.6 42.6v318.7c-0.1 70.8-57.7 128.4-128.5 128.4z" fill="#3688FF"/>
+                    </svg>
+                    <Link to={"/home"}>Strona<br/>Główna</Link>
+                </li>
                 <li className="nav__items">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" className="icon" version="1.1">
                         <path d="M981.3 170.7H320c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7h661.3c23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7zM981.3 938.7H320c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7h661.3c23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7zM981.3 554.7H320c-23.6 0-42.7-19.1-42.7-42.7s19.1-42.7 42.7-42.7h661.3c23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7z" fill="#3688FF"/>
@@ -70,15 +118,15 @@ function App() {
                     </svg>
                     <Link to={"/bookingList"}>Rezerwacje</Link>
                 </li>
-
-                <li className="nav__items">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" className="icon" version="1.1">
-                        <path d="M823.3 938.8H229.4c-71.6 0-129.8-58.2-129.8-129.8V215.1c0-71.6 58.2-129.8 129.8-129.8h297c23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7h-297c-24.5 0-44.4 19.9-44.4 44.4V809c0 24.5 19.9 44.4 44.4 44.4h593.9c24.5 0 44.4-19.9 44.4-44.4V512c0-23.6 19.1-42.7 42.7-42.7s42.7 19.1 42.7 42.7v297c0 71.6-58.2 129.8-129.8 129.8z" fill="#3688FF"/>
-                        <path d="M483 756.5c-1.8 0-3.5-0.1-5.3-0.3l-134.5-16.8c-19.4-2.4-34.6-17.7-37-37l-16.8-134.5c-1.6-13.1 2.9-26.2 12.2-35.5l374.6-374.6c51.1-51.1 134.2-51.1 185.3 0l26.3 26.3c24.8 24.7 38.4 57.6 38.4 92.7 0 35-13.6 67.9-38.4 92.7L513.2 744c-8.1 8.1-19 12.5-30.2 12.5z m-96.3-97.7l80.8 10.1 359.8-359.8c8.6-8.6 13.4-20.1 13.4-32.3 0-12.2-4.8-23.7-13.4-32.3L801 218.2c-17.9-17.8-46.8-17.8-64.6 0L376.6 578l10.1 80.8z" fill="#5F6379"/>
-                    </svg>
-                    <Link to={"/booking"}>Rezerwuj</Link>
+                  <li className="nav__items">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" className="icon" version="1.1">
+                          <path d="M823.3 938.8H229.4c-71.6 0-129.8-58.2-129.8-129.8V215.1c0-71.6 58.2-129.8 129.8-129.8h297c23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7h-297c-24.5 0-44.4 19.9-44.4 44.4V809c0 24.5 19.9 44.4 44.4 44.4h593.9c24.5 0 44.4-19.9 44.4-44.4V512c0-23.6 19.1-42.7 42.7-42.7s42.7 19.1 42.7 42.7v297c0 71.6-58.2 129.8-129.8 129.8z" fill="#3688FF"/>
+                          <path d="M483 756.5c-1.8 0-3.5-0.1-5.3-0.3l-134.5-16.8c-19.4-2.4-34.6-17.7-37-37l-16.8-134.5c-1.6-13.1 2.9-26.2 12.2-35.5l374.6-374.6c51.1-51.1 134.2-51.1 185.3 0l26.3 26.3c24.8 24.7 38.4 57.6 38.4 92.7 0 35-13.6 67.9-38.4 92.7L513.2 744c-8.1 8.1-19 12.5-30.2 12.5z m-96.3-97.7l80.8 10.1 359.8-359.8c8.6-8.6 13.4-20.1 13.4-32.3 0-12.2-4.8-23.7-13.4-32.3L801 218.2c-17.9-17.8-46.8-17.8-64.6 0L376.6 578l10.1 80.8z" fill="#5F6379"/>
+                      </svg>
+                      <Link to={"/booking"}>Rezerwuj</Link>
                 </li>
-
+              </div>
+              )}
                 {/* <li className="nav__items">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" className="icon" version="1.1">
                         <path d="M823.3 938.8H229.4c-71.6 0-129.8-58.2-129.8-129.8V215.1c0-71.6 58.2-129.8 129.8-129.8h297c23.6 0 42.7 19.1 42.7 42.7s-19.1 42.7-42.7 42.7h-297c-24.5 0-44.4 19.9-44.4 44.4V809c0 24.5 19.9 44.4 44.4 44.4h593.9c24.5 0 44.4-19.9 44.4-44.4V512c0-23.6 19.1-42.7 42.7-42.7s42.7 19.1 42.7 42.7v297c0 71.6-58.2 129.8-129.8 129.8z" fill="#3688FF"/>
@@ -133,16 +181,23 @@ function App() {
         </nav>
       </div>
       <div className="col-md-8">
-      {currentUser ? (
+      {currentUser && currentUser.roles && currentUser.roles.includes("ROLE_USER") ? (
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
           <Route path="/home" element={<HomePage />} />
-          <Route path="/register" element={<RegisterPage />} />
           <Route path="/bookingList" element={<BookingListPage />} />
           <Route path="/booking" element={<BookingPage />} />
           <Route path="/booking/map" element={<BookingMapPage />} />
           {/* <Route path="/findColleague" element={<FindColleaguePage />} /> */}
           {/* <Route path="/profile" element={<ProfilePage />} /> */}
+          <Route path="*" element={<NoPage />} />
+        </Routes>
+      ) :
+      currentUser && currentUser.roles && currentUser.roles.includes("ROLE_ADMIN") ? (
+        <Routes>
+          <Route path="/dashboard/home" element={<DashboardHomePage />} />
+          <Route path="/dashboard/bookingList" element={<DashboardBookingListPage />} />
+          <Route path="/dashboard/spaceList" element={<DashboardSpaceListPage />} />
+          <Route path="/dashboard/reports" element={<DashboardReportsPage />} />
           <Route path="*" element={<NoPage />} />
         </Routes>
       ) : (

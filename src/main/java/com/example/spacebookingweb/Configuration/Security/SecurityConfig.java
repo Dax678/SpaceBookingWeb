@@ -67,7 +67,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/api/test/all").permitAll()
-                                .requestMatchers("/api/test/user").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/api/test/user").hasAnyRole("USER")
                                 .requestMatchers(
                                         //API FLOOR
                                         "/api/floor",
@@ -90,7 +90,10 @@ public class SecurityConfig {
                                         "/api/user/{id}/reservations/{status}",
                                         "/api/user/{id}/details"
                                 ).hasAnyRole("USER", "ADMIN")
-                                .requestMatchers("/api/test/admin").hasRole("ADMIN")
+                                .requestMatchers(
+                                        "/api/test/admin",
+                                        "/api/reservation/details"
+                                ).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );
 

@@ -2,10 +2,7 @@ package com.example.spacebookingweb.Database.View;
 
 import com.google.errorprone.annotations.Immutable;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,40 +11,40 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-@Immutable
 @Entity
+@Immutable
 @Table(name = "user_reservation_view")
 public class UserReservationView {
     @Id
-    @Column(name = "reservation_id")
-    private Long reservation_id;
+    @Column(name = "id")
+    private Long reservationId;
 
     @Column(name = "user_id")
-    private Long user_id;
+    private Long userId;
 
     @Column(name = "name")
-    private String space_name;
+    private String spaceName;
 
     @Column(name = "type")
-    private String space_type;
+    private String spaceType;
 
-    @Column(name = "height_adjustable")
-    private Boolean height_adjustable;
+    @Column(name = "is_height_adjustable")
+    private Boolean isHeightAdjustable;
 
     @Column(name = "floor_num")
-    private String floor_num;
+    private String floorNum;
 
     @Column(name = "reservation_date", columnDefinition = "timestamp(6) default null")
-    private LocalDate reservation_date;
+    private LocalDate reservationDate;
 
     @Column(name = "reservation_status")
-    private Boolean reservation_status;
+    private Boolean reservationStatus;
 }
 
 //CREATE VIEW user_reservation_view AS
-//SELECT reservation_id, user_id, s.name, s.type, s.height_adjustable, f.floor_num, r.reservation_date, r.reservation_status
+//SELECT r.id, r.user_id, s.name, s.type, s.is_height_adjustable, f.floor_num, r.reservation_date, r.reservation_status
 //	FROM public.reservation r
 //	INNER JOIN public.space s
-//	ON r.space_id=s.space_id
+//	ON r.space_id=s.id
 //	INNER JOIN public.floor f
-//	ON s.floor_id=f.floor_id
+//	ON s.floor_id=f.id

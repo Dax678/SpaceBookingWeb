@@ -208,8 +208,8 @@ return (
                     <tr key={space.id}>
                       <td>{space.name}</td>
                       <td>{space.type}</td>
-                      <td>{space.monitorNumber ? 'Tak' : 'Nie'}</td>
-                      <td>{space.heightAdjustable}</td>
+                      <td>{space.monitorNumber}</td>
+                      <td>{space.isHeightAdjustable ? 'Tak' : 'Nie'}</td>
                       <td>
                       <button 
                         className="btn btn-primary d-block btn-user w-100" 

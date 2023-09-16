@@ -16,20 +16,19 @@ import java.util.Set;
 @ToString
 @Entity
 @Table(name = "user", schema = "public")
-//@SecondaryTable(name="user_details", pkJoinColumns = @PrimaryKeyJoinColumn(name = "user_id", referencedColumnName = "user_id"))
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(unique = true)
+    @Column(name = "username", unique = true)
     private String username;
 
-    @Column
+    @Column(name = "password")
     private String password;
 
-    @Column(unique = true)
+    @Column(name= "email",unique = true)
     private String email;
 
     @Column(name = "role")
@@ -38,7 +37,7 @@ public class User {
     @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "id", referencedColumnName = "user_id")
     private UserDetails userDetails;
 
     @OneToMany(mappedBy = "user")

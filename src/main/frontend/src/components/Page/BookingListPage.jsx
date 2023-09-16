@@ -119,12 +119,12 @@ function BookingListPage() {
                             </thead>
                             <tbody>
                                 {currentItems.map((reservation) => (
-                                    <tr key={reservation.reservation_id}>
-                                        <td>{reservation.space_name}</td>
-                                        <td>{reservation.space_type}</td>
-                                        <td>{reservation.floor_num}</td>
-                                        <td>{reservation.height_adjustable ? 'Tak' : 'Nie'}</td>
-                                        <td>{reservation.reservation_date}</td>
+                                    <tr key={reservation.reservationId}>
+                                        <td>{reservation.spaceName}</td>
+                                        <td>{reservation.spaceType}</td>
+                                        <td>{reservation.floorNum}</td>
+                                        <td>{reservation.isHeightAdjustable ? 'Tak' : 'Nie'}</td>
+                                        <td>{reservation.reservationDate}</td>
                                         <td>
                                             <button 
                                             className="btn btn-primary d-block btn-user w-100" 
@@ -132,7 +132,7 @@ function BookingListPage() {
                                             data-bs-toggle="modal" 
                                             data-bs-target="#successModal"
                                             onClick={() => {
-                                                setDeleteReservationInfo(reservation.reservation_id);
+                                                setDeleteReservationInfo(reservation.reservationId);
                                                 setConfirmationShowModal(true);
                                             }}
                                             >

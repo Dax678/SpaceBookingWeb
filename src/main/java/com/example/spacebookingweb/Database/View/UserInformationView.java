@@ -5,22 +5,19 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @RequiredArgsConstructor
 @Getter
 @Setter
 @ToString
-@Immutable
 @Entity
-@Table(name = "user_informations_view")
+@Immutable
+@Table(name = "user_information_view")
 public class UserInformationView {
     @Id
-    @Column(name = "user_id")
-    private Long user_id;
+    @Column(name = "id")
+    private Long userId;
 
     @Column(name="name")
     private String name;
@@ -35,14 +32,14 @@ public class UserInformationView {
     private String address;
 
     @Column(name="phone_number")
-    private String phone_number;
+    private String phoneNumber;
 
     @Column(name = "profile_image")
-    private String profile_image;
+    private String profileImage;
 }
 
 //CREATE VIEW user_information_view AS
-//SELECT u.user_id, ud.name, ud.surname, u.email, ud.address, ud.phone_number, ud.profile_image
+//SELECT u.id, ud.name, ud.surname, u.email, ud.address, ud.phone_number, ud.profile_image
 //	FROM public.user u
 //	INNER JOIN public.user_details ud
-//	ON u.user_id=ud.user_id
+//	ON u.id=ud.user_id

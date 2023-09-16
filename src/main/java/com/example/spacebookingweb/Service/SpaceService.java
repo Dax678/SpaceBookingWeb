@@ -26,11 +26,11 @@ public class SpaceService {
         return spaceRepository.findSpaceByType(type);
     }
 
-    public List<Space> getSpaceByHeightAdjustable(Boolean bool) {
-        return spaceRepository.findSpaceByHeightAdjustable(bool);
+    public List<Space> getSpaceByIsHeightAdjustable(Boolean bool) {
+        return spaceRepository.findSpaceByIsHeightAdjustable(bool);
     }
 
-    public List<Space> getSpacesByFloorIdAndType(Long floor_id, String type, LocalDate date, Boolean bool) {
-        return spaceRepository.findSpacesByFloor_idAndType(floor_id, type, date, bool);
+    public List<Space> getSpacesByFloorIdAndType(Long floorId, String type, LocalDate date, Boolean bool) {
+        return spaceRepository.findSpacesByFloor_idAndType(floorId, type, date, bool);
     }
 }

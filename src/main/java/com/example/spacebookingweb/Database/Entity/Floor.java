@@ -18,11 +18,11 @@ import java.util.List;
 public class Floor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "floor_id")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "floor_num")
-    private String floor_num;
+    private String floorNum;
 
     //IT, HR, Finance, Parking - 4 types
     @Column(name = "name")

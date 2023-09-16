@@ -18,6 +18,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Boolean existsUserByEmail(String email);
 
-    @Query(value = "SELECT view FROM UserInformationView view WHERE view.user_id=:id")
+    @Query(value = "SELECT view FROM UserInformationView view WHERE view.userId=:id")
     Optional<UserInformationView> findUserInformationByUserId(Long id);
 }

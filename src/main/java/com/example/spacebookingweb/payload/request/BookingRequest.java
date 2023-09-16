@@ -10,11 +10,11 @@ import java.time.LocalDate;
 @Setter
 public class BookingRequest {
     @NotBlank
-    private Long user_id;
+    private Long userId;
     @NotBlank
-    private Long space_id;
+    private Long spaceId;
     @NotBlank
     private LocalDate date;
     @NotBlank
-    private Boolean reservation_status;
+    private Boolean reservationStatus;
 }

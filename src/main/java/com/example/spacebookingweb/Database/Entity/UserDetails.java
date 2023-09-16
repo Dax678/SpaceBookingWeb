@@ -18,7 +18,7 @@ public class UserDetails {
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long userId;
     @Column
     private String name;
     @Column
@@ -30,7 +30,7 @@ public class UserDetails {
     @Column(name = "profile_image")
     private String profileImage;
 
-    @JsonIgnoreProperties({"userDetails"})
+    @JsonIgnoreProperties({"user_details"})
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")

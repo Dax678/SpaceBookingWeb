@@ -15,6 +15,6 @@ public class UserDetailsService {
     UserDetailsRepository userDetailsRepository;
 
     public Optional<UserDetails> getUserDetailsById(Long id) {
-        return userDetailsRepository.findUserDetailsById(id);
+        return userDetailsRepository.findUserDetailsByUserId(id);
     }
 }

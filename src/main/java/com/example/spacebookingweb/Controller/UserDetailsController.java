@@ -31,10 +31,6 @@ public class UserDetailsController {
     public ResponseEntity<UserDetails> getUserDetailsById(@PathVariable("id") Long id) {
         Optional<UserDetails> optionalUserDetails = userDetailsService.getUserDetailsById(id);
 
-        if(optionalUserDetails.isPresent()) {
-            return ResponseEntity.ok(optionalUserDetails.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return optionalUserDetails.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

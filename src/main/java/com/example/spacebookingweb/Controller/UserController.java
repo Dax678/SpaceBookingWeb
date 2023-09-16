@@ -68,8 +68,8 @@ public class UserController {
     )
     @GetMapping("/{id}/reservations")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<List<UserReservationView>> getUserReservationList(@PathVariable("id") Long id) {
-        List<UserReservationView> reservationList = reservationService.getReservationByUserId(id);
+    public ResponseEntity<List<UserReservationView>> getUserReservationsList(@PathVariable("id") Long id) {
+        List<UserReservationView> reservationList = reservationService.getReservationsByUserId(id);
 
         if (!reservationList.isEmpty()) {
             return ResponseEntity.ok(reservationList);

@@ -5,7 +5,6 @@ import com.example.spacebookingweb.Service.SpaceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -88,8 +87,8 @@ public class SpaceController {
     )
     @GetMapping("/heightAdjustable/{bool}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<List<Space>> getSpaceListByHeightAdjustable(@PathVariable("bool") Boolean bool) {
-        List<Space> spaceList = spaceService.getSpaceByHeightAdjustable(bool);
+    public ResponseEntity<List<Space>> getSpaceListByIsHeightAdjustable(@PathVariable("bool") Boolean bool) {
+        List<Space> spaceList = spaceService.getSpaceByIsHeightAdjustable(bool);
 
         if (!spaceList.isEmpty()) {
             return ResponseEntity.ok(spaceList);

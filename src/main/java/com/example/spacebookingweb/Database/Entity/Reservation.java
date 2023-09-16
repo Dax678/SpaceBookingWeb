@@ -18,40 +18,39 @@ public class Reservation {
     //PK
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "reservation_id")
+    @Column(name = "id")
     private Long id;
 
     //FK
     @Column(name = "user_id")
-    private Long user_id;
+    private Long userId;
 
     //FK
     @Column(name = "space_id")
-    private Long space_id;
+    private Long spaceId;
 
     //FK
     @Column(name = "payment_id")
-    private Long payment_id;
+    private Long paymentId;
 
     //cannot be > 1 day
     @Column(name = "reservation_date")
-    private LocalDate reservation_date;
+    private LocalDate reservationDate;
 
     @Column(name = "reservation_status")
-    private Boolean reservation_status;
-
+    private Boolean reservationStatus;
 
     @JsonIgnore // Ignoruje pole "parent" podczas serializacji
     @ManyToOne(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id",
+    @JoinColumn(name = "user_id", referencedColumnName = "id",
             insertable = false, updatable = false)
     private User user;
 
     @JsonIgnore // Ignoruje pole "parent" podczas serializacji
     @ManyToOne(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "space_id", referencedColumnName = "space_id",
+    @JoinColumn(name = "space_id", referencedColumnName = "id",
             insertable = false, updatable = false)
     private Space space;
 }

@@ -97,10 +97,10 @@ const FloorPlan = () => {
   
 
   useEffect(() => {
-    apiFloorService. getFloorReservations(floorId, date)
+    apiFloorService.getFloorReservations(floorId, date)
       .then((response) => {
         setReservations(response.data);
-        const reservedSeats = response.data.map(reservation => reservation.space_id);
+        const reservedSeats = response.data.map(reservation => reservation.spaceId);
         setSelectedSeat(reservedSeats);
       })
       .catch((error) => {

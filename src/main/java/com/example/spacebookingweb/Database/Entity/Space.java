@@ -18,11 +18,11 @@ import java.util.List;
 public class Space {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "space_id")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "floor_id")
-    private Long floor_id;
+    private Long floorId;
 
     @Column(name = "name")
     private String name;
@@ -33,8 +33,11 @@ public class Space {
     @Column(name = "monitor_number")
     private int monitorNumber;
 
-    @Column(name = "height_adjustable")
-    private Boolean heightAdjustable;
+    @Column(name = "is_height_adjustable")
+    private Boolean isHeightAdjustable;
+
+    @Column(name = "is_available")
+    private Boolean isAvailable;
 
     @OneToMany(mappedBy = "space")
     @JsonIgnore
@@ -43,7 +46,7 @@ public class Space {
     @JsonIgnore // Ignoruje pole "parent" podczas serializacji
     @ManyToOne(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "floor_id", referencedColumnName = "floor_id",
+    @JoinColumn(name = "floor_id", referencedColumnName = "id",
             insertable = false, updatable = false)
     private Floor floor;
 
