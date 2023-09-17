@@ -3,9 +3,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Form from "react-validation/build/form";
 import { Button, Container, Image, Modal } from 'react-bootstrap';
 
-import apiReservationService from '../../services/api-reservation.service';
-import AuthService from "./../../services/auth.service";
-import apiSpaceService from "./../../services/api-space.service";
+import apiReservationService from '../../../services/api-reservation.service';
+import AuthService from "../../../services/auth.service";
+import apiSpaceService from "../../../services/api-space.service";
 
 function BookingPage() {
   const [showSuccessModal, setSuccessShowModal] = useState(false);

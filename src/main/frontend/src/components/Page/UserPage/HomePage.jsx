@@ -1,5 +1,5 @@
 import React from 'react';
-import AuthService from "./../../services/auth.service";
+import AuthService from "../../../services/auth.service";
 
 const HomePage = () => {
   const user = AuthService.getCurrentUser();

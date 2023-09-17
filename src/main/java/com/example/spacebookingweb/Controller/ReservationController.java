@@ -1,5 +1,6 @@
 package com.example.spacebookingweb.Controller;
 
+import com.example.spacebookingweb.Configuration.PDFGeneratorReservationDetails;
 import com.example.spacebookingweb.Database.Entity.Reservation;
 import com.example.spacebookingweb.Database.View.ReservationDetailsView;
 import com.example.spacebookingweb.Service.ReservationService;
@@ -8,12 +9,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -75,7 +80,7 @@ public class ReservationController {
     public ResponseEntity<Reservation> updateReservationStatus(@PathVariable(value = "id") Long reservationId,
                                                                @RequestBody String newStatus) {
         Optional<Reservation> optionalReservation = reservationService.getReservationById(reservationId);
-        if(optionalReservation.isPresent()) {
+        if (optionalReservation.isPresent()) {
             Reservation reservation = optionalReservation.get();
             reservation.setReservationStatus(Boolean.valueOf(newStatus));
             reservationService.updateReservationStatus(reservation);
@@ -95,5 +100,22 @@ public class ReservationController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/details/filePDF")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<byte[]> generatePDF(@RequestParam("reservationStartDate") LocalDate reservationStartDate,
+                                              @RequestParam("reservationEndDate") LocalDate reservationEndDate) throws IOException {
+
+        PDFGeneratorReservationDetails generator = new PDFGeneratorReservationDetails();
+        generator.setReservationDetailsViewList(reservationService.getAllReservationsWithInformationDetails(reservationStartDate, reservationEndDate));
+        byte[] pdfBytes = generator.generate(reservationStartDate, reservationEndDate);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("inline", "reservation_report_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss")) + ".pdf");
+        headers.setContentLength(pdfBytes.length);
+
+        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
     }
 }

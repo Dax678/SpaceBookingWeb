@@ -4,10 +4,10 @@ import { Button, Container, Image, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import './FloorPlan.css';
 
-import apiFloorService from '../../services/api-floor.service';
-import apiReservationService from '../../services/api-reservation.service';
+import apiFloorService from  '../../../services/api-floor.service';
+import apiReservationService from '../../../services/api-reservation.service';
 
-import AuthService from "./../../services/auth.service";
+import AuthService from "../../../services/auth.service";
 
 const Seat = ({ name, position, selected, disabled, onClick }) => {
   return (
@@ -109,16 +109,13 @@ const FloorPlan = () => {
   }, [floorId, date]);
 
   useEffect(() => {
-    console.log(selectedSeat);
-
     const updatedSeatData = seatData.map(seat => ({
       ...seat,
-      isSelected: selectedSeat.includes(seat.id),
+      isSelected: selectedSeat.includes(seat.id) && selectedSeat.isAvailable,
     }));
 
     setSeatData(updatedSeatData);
 
-    console.log(updatedSeatData);
   }, [selectedSeat]);
 
   const handleSeatClick = (id, name, position) => {

@@ -6,22 +6,22 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 
 //Main site imports
-import LoginPage from './components/Page/LoginPage';
-import RegisterPage from './components/Page/RegisterPage';
-import HomePage from './components/Page/HomePage';
-import LandingPage from './components/Page/LandingPage';
-import BookingPage from './components/Page/BookingPage';
-import BookingMapPage from './components/Page/BookingMapPage';
-import BookingListPage from './components/Page/BookingListPage';
-import ProfilePage from './components/Page/ProfilePage';
-import FindColleaguePage from './components/Page/FindColleaguePage';
-import NoPage from './components/Page/NoPage';
+import LoginPage from './components/Page/UserPage/LoginPage';
+import RegisterPage from './components/Page/UserPage/RegisterPage';
+import HomePage from './components/Page/UserPage/HomePage';
+import LandingPage from './components/Page/UserPage/LandingPage';
+import BookingPage from './components/Page/UserPage/BookingPage';
+import BookingMapPage from './components/Page/UserPage/BookingMapPage';
+import BookingListPage from './components/Page/UserPage/BookingListPage';
+import ProfilePage from './components/Page/UserPage/ProfilePage';
+import FindColleaguePage from './components/Page/UserPage/FindColleaguePage';
+import NoPage from './components/Page/UserPage/NoPage';
 
 //Dashboards imports
-import DashboardHomePage from './components/Page/Admin Dashboard/DashboardHomePage';
-import DashboardBookingListPage from './components/Page/Admin Dashboard/DashboardBookingListPage';
-import DashboardSpaceListPage from './components/Page/Admin Dashboard/DashboardSpaceListPage';
-import DashboardReportsPage from './components/Page/Admin Dashboard/DashboardReportsPage';
+import DashboardHomePage from './components/Page/AdminDashboard/DashboardHomePage';
+import DashboardBookingListPage from './components/Page/AdminDashboard/DashboardBookingListPage';
+import DashboardSpaceListPage from './components/Page/AdminDashboard/DashboardSpaceListPage';
+import DashboardReportsPage from './components/Page/AdminDashboard/DashboardReportsPage';
 
 import AuthService from "./services/auth.service";
 import EventBus from "./common/EventBus";

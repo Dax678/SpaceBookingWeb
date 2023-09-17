@@ -1,15 +1,27 @@
 package com.example.spacebookingweb.Controller;
 
+import com.example.spacebookingweb.Configuration.PDFGeneratorReservationDetails;
+import com.example.spacebookingweb.Configuration.PDFGeneratorSpaceDetails;
+import com.example.spacebookingweb.Database.Entity.Reservation;
 import com.example.spacebookingweb.Database.Entity.Space;
+import com.example.spacebookingweb.Service.FloorService;
 import com.example.spacebookingweb.Service.SpaceService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +66,62 @@ public class SpaceController {
        Optional<Space> optionalSpace = spaceService.getSpaceById(id);
 
         return optionalSpace.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Space> updateSpaceStatus(@PathVariable("id") long id,
+                                                   @RequestBody String newStatus) {
+        Optional<Space> optionalSpace = spaceService.getSpaceById(id);
+
+        if (optionalSpace.isPresent()) {
+            Space space = optionalSpace.get();
+
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode jsonNode = objectMapper.readTree(newStatus);
+                boolean status = jsonNode.get("newStatus").asBoolean();
+
+                System.out.println("newStatus: " + status);
+                space.setIsAvailable(status);
+                System.out.println("Space info: " + space.getIsAvailable());
+                spaceService.updateSpaceStatus(space);
+                return ResponseEntity.ok(space);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.badRequest().build();
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/floor/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Space>> getSpaceByFloorId(@PathVariable("id") Long floorId) {
+        List<Space> spaceList = spaceService.getSpaceByFloorId(floorId);
+
+        if (!spaceList.isEmpty()) {
+            return ResponseEntity.ok(spaceList);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/floor/{id}/filePDF")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<byte[]> generatePDF(@PathVariable("id") Long floorId) throws IOException {
+        PDFGeneratorSpaceDetails generator = new PDFGeneratorSpaceDetails();
+        generator.setSpaceList(spaceService.getSpaceByFloorId(floorId));
+
+        byte[] pdfBytes = generator.generate();
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("inline", "space_report_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss")) + ".pdf");
+        headers.setContentLength(pdfBytes.length);
+
+        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
     }
 
     @Operation(

@@ -28,11 +28,23 @@ const getReservationDetails = async (startDate, endDate) => {
   });
 }
 
+const generateReservationReport = async (startDate, endDate) => {
+  return await axios.get(API_URL + '/details/filePDF', {
+    params: {
+      reservationStartDate: startDate,
+      reservationEndDate: endDate
+    },
+    responseType: 'arraybuffer',
+    headers: authHeader()
+  });
+}
+
 
 const apiReservationService = {
     bookSpace,
     changeBookingStatus,
-    getReservationDetails
+    getReservationDetails,
+    generateReservationReport
 };
 
 export default apiReservationService;

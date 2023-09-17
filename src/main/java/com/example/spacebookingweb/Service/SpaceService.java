@@ -1,7 +1,9 @@
 package com.example.spacebookingweb.Service;
 
+import com.example.spacebookingweb.Database.Entity.Reservation;
 import com.example.spacebookingweb.Database.Entity.Space;
 import com.example.spacebookingweb.Repository.SpaceRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,15 @@ public class SpaceService {
 
     public Optional<Space> getSpaceById(Long id) {
         return spaceRepository.findSpaceById(id);
+    }
+
+    public List<Space> getSpaceByFloorId(Long floorId) {
+        return spaceRepository.findSpaceByFloorId(floorId);
+    }
+
+    @Transactional
+    public void updateSpaceStatus(Space space) {
+        spaceRepository.save(space);
     }
 
     public List<Space> getSpaceByType(String type) {

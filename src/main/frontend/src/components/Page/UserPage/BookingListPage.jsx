@@ -4,9 +4,9 @@ import { Button, Container, Image, Modal } from 'react-bootstrap';
 
 import Form from "react-validation/build/form";
 
-import apiReservationService from '../../services/api-reservation.service';
-import AuthService from "./../../services/auth.service";
-import apiUserService from "../../services/api-user.service";
+import apiReservationService from '../../../services/api-reservation.service';
+import AuthService from "../../../services/auth.service";
+import apiUserService from "../../../services/api-user.service";
 
 function BookingListPage() {
     const [showConfirmationModal, setConfirmationShowModal] = useState(false);

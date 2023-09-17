@@ -92,7 +92,10 @@ public class SecurityConfig {
                                 ).hasAnyRole("USER", "ADMIN")
                                 .requestMatchers(
                                         "/api/test/admin",
-                                        "/api/reservation/details"
+                                        "/api/reservation/details",
+                                        "/api/reservation/details/pdf",
+                                        "/api/space/floor/{id}",
+                                        "/api/space/floor/{id}/filePDF"
                                 ).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );
