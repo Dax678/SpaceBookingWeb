@@ -20,6 +20,8 @@ public interface SpaceRepository extends JpaRepository<Space, Long> {
 
     List<Space> findSpaceByType(String type);
 
+    List<Space> findSpacesByIsAvailable(Boolean bool);
+
     @Query(value = "SELECT s FROM Space s " +
             "WHERE NOT EXISTS (SELECT 1 FROM Reservation r WHERE r.spaceId=s.id AND r.reservationDate = :date AND r.reservationStatus=:bool) " +
             "AND s.floorId=:floorId " +

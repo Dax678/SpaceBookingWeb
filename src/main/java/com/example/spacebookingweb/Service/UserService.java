@@ -1,16 +1,10 @@
 package com.example.spacebookingweb.Service;
 
 import com.example.spacebookingweb.Database.Entity.User;
-import com.example.spacebookingweb.Database.Entity.UserDetails;
 import com.example.spacebookingweb.Database.View.UserInformationView;
-import com.example.spacebookingweb.Database.View.UserReservationView;
-import com.example.spacebookingweb.Repository.UserDetailsRepository;
 import com.example.spacebookingweb.Repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

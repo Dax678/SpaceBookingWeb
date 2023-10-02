@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useLocation, useNavigate} from 'react-router-dom';
 import Form from "react-validation/build/form";
-import { Button, Container, Image, Modal } from 'react-bootstrap';
+import {Button, Container, Modal} from 'react-bootstrap';
 
 import apiReservationService from '../../../services/api-reservation.service';
 import AuthService from "../../../services/auth.service";
@@ -20,6 +20,8 @@ function BookingPage() {
   const [spaces, setSpaces] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   const location = useLocation();
   const { floorNumber, date } = location.state || {};
@@ -49,7 +51,9 @@ function BookingPage() {
       event.preventDefault();
       apiSpaceService.getSpaceList(formData.floorName, formData.spaceType, formData.date, true)
       .then((response) => {
-        setSpaces(response.data);
+        setSpaces(response.data.sort((a, b) => {
+          return a.name.localeCompare(b.name);
+        }));
       })
       .catch((error) => {
         console.error('Błąd podczas pobierania miejsc:', error);
@@ -82,6 +86,17 @@ function BookingPage() {
     );
   };
 
+  // Oblicz indeksy początkowy i końcowy dla bieżącej strony
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = spaces.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Zmienia stronę
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+
   const handleFloorPageChange = () => {
     navigate(`/booking/map?floorId=${formData.floorName}&date=${formData.date}`, {
       state: {
@@ -108,12 +123,12 @@ function BookingPage() {
 
   const getCurrentDate = () => {
     const dateObj = new Date();
-    const formattedDate = dateObj.toISOString().substr(0, 10); // Format: YYYY-MM-DD
-    return formattedDate;
+     // Format: YYYY-MM-DD
+    return dateObj.toISOString().substr(0, 10);
   };
 
   const availableSpaceTypes = {
-    '1': ['Tech', 'Standard'],
+    '1': ['Tech', 'Standard', 'Room'],
     '2': ['Tech', 'Standard'],
     '3': ['Tech', 'Standard'],
     '4': ['Parking'],
@@ -204,7 +219,7 @@ return (
                   </tr>
                 </thead>
                 <tbody>
-                  {spaces.map((space) => (
+                  {currentItems.map((space) => (
                     <tr key={space.id}>
                       <td>{space.name}</td>
                       <td>{space.type}</td>
@@ -227,6 +242,21 @@ return (
                   ))}
                 </tbody>
               </table>
+            </div>
+            <div className="row">
+              <div className="col-md-12">
+                <nav className="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                  <ul className="pagination">
+                    {Array.from({ length: Math.ceil(spaces.length / itemsPerPage) }).map((_, index) => (
+                        <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                          <a className="page-link" href="#!" onClick={() => paginate(index + 1)}>
+                            {index + 1}
+                          </a>
+                        </li>
+                    ))}
+                  </ul>
+                </nav>
+              </div>
             </div>
           </div>
         </div>

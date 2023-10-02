@@ -13,6 +13,11 @@ const getSpaceListById = async (floorId) => {
         .get(API_URL + "floor/" + floorId, { headers: authHeader() });
 }
 
+const getDisabledSpaces = async (bool) => {
+    return await axios
+        .get(API_URL + "isAvailable/" + bool, { headers: authHeader() });
+}
+
 const changeSpaceStatus = async (spaceId, newStatus) => {
     return axios.put(API_URL + spaceId, {
         newStatus
@@ -30,7 +35,8 @@ const apiSpaceService = {
     getSpaceList,
     getSpaceListById,
     changeSpaceStatus,
-    generateSpaceReport
+    generateSpaceReport,
+    getDisabledSpaces,
 };
 
 export default apiSpaceService;

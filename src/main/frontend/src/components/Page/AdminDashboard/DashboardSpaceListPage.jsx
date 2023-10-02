@@ -115,9 +115,9 @@ const DashboardSpaceListPage = () => {
                 <Form className="form" onSubmit={handleSearch}>
                 <p>
                   <label htmlFor="floorId">Wybierz piętro</label>
-                  <select 
-                    id="floorId" 
-                    name="floorId" 
+                  <select
+                    id="floorId"
+                    name="floorId"
                     className="form-control"
                     value={formData.floorId}
                     onChange={handleInputChange}
@@ -129,8 +129,8 @@ const DashboardSpaceListPage = () => {
                     <option value="5">Parking -2</option>
                   </select>
                 </p>
-                <button 
-                  className="d-flex justify-content-center btn btn-primary d-block btn-user w-100" 
+                <button
+                  className="d-flex justify-content-center btn btn-primary d-block btn-user w-100"
                   type="submit">
                     Znajdź Miejsca
                 </button>
@@ -166,10 +166,10 @@ const DashboardSpaceListPage = () => {
                                     <td>{space.isHeightAdjustable ? 'Tak' : 'Nie'}</td>
                                     <td>{space.isAvailable ? 'Tak' : 'Nie'}</td>
                                     <td>
-                                    <button 
-                                            className="btn btn-primary d-block btn-user w-100" 
-                                            type="submit" 
-                                            data-bs-toggle="modal" 
+                                    <button
+                                            className="btn btn-primary d-block btn-user w-100"
+                                            type="submit"
+                                            data-bs-toggle="modal"
                                             data-bs-target="#successModal"
                                             onClick={() => {
                                                 setStatusChangeInfo({spaceId: space.id, newStatus: !space.isAvailable});
@@ -205,46 +205,46 @@ const DashboardSpaceListPage = () => {
 
     <Modal show={showConfirmationModal} onHide={handleCloseModal}>
             <Modal.Header closeButton>
-            <Modal.Title>Confirm Reservation</Modal.Title>
+            <Modal.Title>Potwierdź Zmianę Statusu</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                Are you sure you want to change space status?
+                Czy na pewno chcesz zmienić status miejsca?
             </Modal.Body>
             <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseModal}>
-                Cancel
+                Anuluj
             </Button>
             <Button variant="primary" onClick={handleStatusChange}>
-                Change Status
+                Zmień Status
             </Button>
             </Modal.Footer>
         </Modal>
         <Modal show={showSuccessModal} onHide={handleNavigationReloadPage}>
             <Modal.Header closeButton>
-                <Modal.Title>Deleted Reservation</Modal.Title>
+                <Modal.Title>Status Został Zmieniony</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                Your reservation has been deleted.
+                Status został pomyślnie zmieniony.
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleNavigationHomePage}>
-                Go to Home Page
+                    Wróć do Strony Głównej
                 </Button>
                 <Button variant="primary" onClick={handleNavigationReloadPage}>
-                Close
+                    Zamknij
                 </Button>
             </Modal.Footer>
         </Modal>
         <Modal show={showFailureModal} onHide={handleFailure}>
         <Modal.Header closeButton>
-          <Modal.Title>Failure Reservation</Modal.Title>
+          <Modal.Title>Błąd podczas zmiany Rezerwacji</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Something goes wrong. Please reload the page.
+            Coś poszło nie tak. Odśwież stronę.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={handleFailure}>
-            Refresh Page
+              Odśwież Stronę
           </Button>
         </Modal.Footer>
       </Modal>

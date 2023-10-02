@@ -29,7 +29,7 @@ function BookingListPage() {
                 //console.log(response);
                 //Zapis posortowanych danych do zmiennej
                 setReservations(response.data.sort((a, b) => {
-                    return new Date(a.reservation_date) - new Date(b.reservation_date);
+                    return new Date(a.reservationDate) - new Date(b.reservationDate);
             }));
             } catch (error) {
                 console.error('Błąd podczas pobierania rezerwacji:', error);
@@ -96,15 +96,6 @@ function BookingListPage() {
                     <p className="text-primary m-0 fw-bold">Lista rezerwacji</p>
                 </div>
                 <div className="card-body">
-                    <div className="row">
-                        <div className="col-md-12">
-                            <div className="text-md-end dataTables_filter" id="dataTable_filter">
-                                <label className="form-label">
-                                    <input type="search" className="form-control form-control-sm" aria-controls="dataTable" placeholder="Search"></input>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
                     <div className="table-responsive table mt-2" role="grid" aria-describedby="dataTable_info">
                         <table className="table my-0">
                             <thead>

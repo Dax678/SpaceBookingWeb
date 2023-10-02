@@ -78,6 +78,7 @@ public class SecurityConfig {
                                         "/api/space/{id}",
                                         "/api/space/type/{type}",
                                         "/api/space/heightAdjustable/{bool}",
+                                        "/api/space/isAvailable/{bool}",
                                         "/api/space/{id}/{type}/{date}/{status}",
                                         // API RESERVATION
                                         "/api/reservation",
@@ -93,7 +94,7 @@ public class SecurityConfig {
                                 .requestMatchers(
                                         "/api/test/admin",
                                         "/api/reservation/details",
-                                        "/api/reservation/details/pdf",
+                                        "/api/reservation/details/filePDF",
                                         "/api/space/floor/{id}",
                                         "/api/space/floor/{id}/filePDF"
                                 ).hasRole("ADMIN")

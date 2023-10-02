@@ -17,17 +17,27 @@
     width: 40px;
     height: 40px;
   }
-  
-  .seat-button.open {
-    background-color: #329272;
-    border-color: #329272;
+
+.seat-button.open {
+    background-color: #329250;
+    border-color: #329250;
     color: white;
   }
 
+.seat-button.open:hover {
+  background-color: #0082ff;
+  border-color: #0082ff;
+  color: white;
+}
+
   .seat-button.selected {
-    background-color: red;
+    background-color: #0082ff;
+    border-color: #0082ff;
     color: white;
   }
-  
-  /* Dodaj dodatkowe style dla innych przycisków, dostosuj pozycje, kolory, itp. */
-  
+
+  .seat-button.notAvailable {
+    background-color: red;
+    border-color: red;
+    color: white;
+  }

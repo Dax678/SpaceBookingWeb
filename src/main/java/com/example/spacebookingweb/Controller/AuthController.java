@@ -4,7 +4,10 @@ import com.example.spacebookingweb.Configuration.Security.auth.jwt.JwtUtils;
 import com.example.spacebookingweb.Configuration.Security.auth.service.UserDetailsImpl;
 import com.example.spacebookingweb.Database.Entity.ERole;
 import com.example.spacebookingweb.Database.Entity.User;
+import com.example.spacebookingweb.Database.Entity.UserDetails;
+import com.example.spacebookingweb.Repository.UserDetailsRepository;
 import com.example.spacebookingweb.Repository.UserRepository;
+import com.example.spacebookingweb.Service.UserDetailsService;
 import com.example.spacebookingweb.Service.UserService;
 import com.example.spacebookingweb.payload.request.LoginRequest;
 import com.example.spacebookingweb.payload.request.SignupRequest;
@@ -33,14 +36,18 @@ public class AuthController {
 
     AuthenticationManager authenticationManager;
     UserRepository userRepository;
+    UserDetailsService userDetailsService;
     PasswordEncoder encoder;
     JwtUtils jwtUtils;
     UserService userService;
 
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, PasswordEncoder encoder, JwtUtils jwtUtils, UserService userService) {
+    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
+                          UserDetailsService userDetailsService, PasswordEncoder encoder,
+                          JwtUtils jwtUtils, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
+        this.userDetailsService = userDetailsService;
         this.encoder = encoder;
         this.jwtUtils = jwtUtils;
         this.userService = userService;
@@ -89,7 +96,19 @@ public class AuthController {
         user.setRole(ERole.ROLE_USER);
 
         User savedUser = userService.saveUser(user);
-        if (savedUser != null) {
+
+
+        UserDetails userDetails = new UserDetails();
+
+        userDetails.setUserId(savedUser.getId());
+        userDetails.setName(signUpRequest.getName());
+        userDetails.setSurname(signUpRequest.getSurname());
+        userDetails.setPhoneNumber(signUpRequest.getPhoneNumber());
+        userDetails.setAddress(signUpRequest.getAddress());
+
+        UserDetails savedUserDetails = userDetailsService.saveUserDetails(userDetails);
+
+        if (savedUser != null && savedUserDetails != null) {
             return ResponseEntity.ok("User registered successfully!");
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving user.");

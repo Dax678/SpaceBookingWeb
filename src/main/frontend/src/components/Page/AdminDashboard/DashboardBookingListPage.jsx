@@ -48,7 +48,7 @@ const DashboardBookingListPage = () => {
         apiReservationService.getReservationDetails(formData.startDate, formData.endDate)
         .then((response) => {
             setReservations(response.data.sort((a, b) => {
-                return new Date(a.reservation_date) - new Date(b.reservation_date)
+                return new Date(a.reservationDate) - new Date(b.reservationDate)
             }))
         })
         .catch((error) => {

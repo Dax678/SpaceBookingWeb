@@ -120,9 +120,9 @@ const LoginPage = () => {
                       )}
                       <CheckButton style={{ display: "none" }} ref={checkBtn} />
                     </Form>
-                    <div className="text-center">
-                      <h5><a className="small" href="forgot-password">Nie pamiętam hasła</a></h5>
-                    </div>
+                    {/*<div className="text-center">*/}
+                    {/*  <h5><a className="small" href="forgot-password">Nie pamiętam hasła</a></h5>*/}
+                    {/*</div>*/}
                     <div className="text-center">
                     <h5><a className="small" href="/register">Stwórz nowe konto</a></h5>
                     </div>

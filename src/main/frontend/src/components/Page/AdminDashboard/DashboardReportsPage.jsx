@@ -115,7 +115,7 @@ const DashboardReportsPage = () => {
                 <button 
                   className="d-flex justify-content-center btn btn-primary d-block btn-user w-100" 
                   type="submit">
-                    Wygeneruj Raport
+                    Wygeneruj Raport Rezerwacji
                 </button>
               </Form>
                 </div>
@@ -147,7 +147,7 @@ const DashboardReportsPage = () => {
                 <button 
                   className="d-flex justify-content-center btn btn-primary d-block btn-user w-100" 
                   type="submit">
-                    Znajdź Miejsca
+                    Wygeneruj Raport Miejsc
                 </button>
               </Form>
                 </div>

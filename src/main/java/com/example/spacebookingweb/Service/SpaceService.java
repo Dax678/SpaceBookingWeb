@@ -1,6 +1,5 @@
 package com.example.spacebookingweb.Service;
 
-import com.example.spacebookingweb.Database.Entity.Reservation;
 import com.example.spacebookingweb.Database.Entity.Space;
 import com.example.spacebookingweb.Repository.SpaceRepository;
 import jakarta.transaction.Transactional;
@@ -31,6 +30,10 @@ public class SpaceService {
     @Transactional
     public void updateSpaceStatus(Space space) {
         spaceRepository.save(space);
+    }
+
+    public List<Space> getSpacesByIsAvailable(Boolean bool) {
+        return spaceRepository.findSpacesByIsAvailable(bool);
     }
 
     public List<Space> getSpaceByType(String type) {

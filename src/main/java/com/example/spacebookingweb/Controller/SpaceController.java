@@ -1,10 +1,7 @@
 package com.example.spacebookingweb.Controller;
 
-import com.example.spacebookingweb.Configuration.PDFGeneratorReservationDetails;
 import com.example.spacebookingweb.Configuration.PDFGeneratorSpaceDetails;
-import com.example.spacebookingweb.Database.Entity.Reservation;
 import com.example.spacebookingweb.Database.Entity.Space;
-import com.example.spacebookingweb.Service.FloorService;
 import com.example.spacebookingweb.Service.SpaceService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -157,6 +154,18 @@ public class SpaceController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<List<Space>> getSpaceListByIsHeightAdjustable(@PathVariable("bool") Boolean bool) {
         List<Space> spaceList = spaceService.getSpaceByIsHeightAdjustable(bool);
+
+        if (!spaceList.isEmpty()) {
+            return ResponseEntity.ok(spaceList);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/isAvailable/{bool}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<List<Space>> getSpacesByIsAvailable(@PathVariable("bool") Boolean bool) {
+        List<Space> spaceList = spaceService.getSpacesByIsAvailable(bool);
 
         if (!spaceList.isEmpty()) {
             return ResponseEntity.ok(spaceList);
