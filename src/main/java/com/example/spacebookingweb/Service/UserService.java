@@ -26,6 +26,10 @@ public class UserService {
         return userRepository.findUserById(id);
     }
 
+    public Boolean checkUserIsPresent(Long id) {
+        return  userRepository.existsById(id);
+    }
+
     @Transactional
     public User saveUser(User user) {
         return userRepository.save(user);

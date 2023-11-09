@@ -2,16 +2,16 @@ package com.example.spacebookingweb.Database.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @RequiredArgsConstructor
-@Getter
-@Setter
-@ToString
+@Data
 @Entity
 @Table(name = "reservation", schema = "public")
 public class Reservation {
@@ -23,22 +23,34 @@ public class Reservation {
 
     //FK
     @Column(name = "user_id")
+    @NotNull
     private Long userId;
 
     //FK
     @Column(name = "space_id")
+    @NotNull
     private Long spaceId;
 
     //FK
     @Column(name = "payment_id")
     private Long paymentId;
 
-    //cannot be > 1 day
     @Column(name = "reservation_date")
+    @NotNull
     private LocalDate reservationDate;
 
     @Column(name = "reservation_status")
+    @NotNull
     private Boolean reservationStatus;
+
+    @Column(name = "entity_creation_date")
+    @CreationTimestamp
+    private LocalDate entityCreationDate;
+
+    @Column(name = "reservation_update_date")
+    @UpdateTimestamp
+    private LocalDate reservationUpdateDate;
+
 
     @JsonIgnore // Ignoruje pole "parent" podczas serializacji
     @ManyToOne(cascade = CascadeType.ALL,
@@ -53,4 +65,17 @@ public class Reservation {
     @JoinColumn(name = "space_id", referencedColumnName = "id",
             insertable = false, updatable = false)
     private Space space;
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "userId = " + userId + ", " +
+                "spaceId = " + spaceId + ", " +
+                "paymentId = " + paymentId + ", " +
+                "reservationDate = " + reservationDate + ", " +
+                "reservationStatus = " + reservationStatus + ", " +
+                "entityCreationDate = " + entityCreationDate + ", " +
+                "reservationUpdateDate = " + reservationUpdateDate + ")";
+    }
 }

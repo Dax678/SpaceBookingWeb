@@ -1,5 +1,6 @@
 package com.example.spacebookingweb.Repository;
 
+import com.example.spacebookingweb.Database.Entity.ESpace;
 import com.example.spacebookingweb.Database.Entity.Space;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,7 +19,7 @@ public interface SpaceRepository extends JpaRepository<Space, Long> {
 
     List<Space> findSpaceByIsHeightAdjustable(Boolean bool);
 
-    List<Space> findSpaceByType(String type);
+    List<Space> findSpaceByType(ESpace type);
 
     List<Space> findSpacesByIsAvailable(Boolean bool);
 
@@ -27,7 +28,5 @@ public interface SpaceRepository extends JpaRepository<Space, Long> {
             "AND s.floorId=:floorId " +
             "AND s.type=:type " +
             "AND s.isAvailable=true")
-    List<Space> findSpacesByFloor_idAndType(Long floorId, String type, LocalDate date, Boolean bool);
-
-    //TODO: Filtrowanie wolnych miejsc po dacie -> do kalendarza
+    List<Space> findSpacesByFloor_idAndType(Long floorId, ESpace type, LocalDate date, Boolean bool);
 }

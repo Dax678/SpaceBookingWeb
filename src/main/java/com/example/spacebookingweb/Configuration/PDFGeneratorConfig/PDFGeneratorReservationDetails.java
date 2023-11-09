@@ -1,4 +1,4 @@
-package com.example.spacebookingweb.Configuration;
+package com.example.spacebookingweb.Configuration.PDFGeneratorConfig;
 
 import com.example.spacebookingweb.Database.View.ReservationDetailsView;
 import com.lowagie.text.Document;

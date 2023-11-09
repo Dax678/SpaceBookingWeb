@@ -21,6 +21,10 @@ public class ReservationService {
         return reservationRepository.findReservationById(id);
     }
 
+    public Boolean checkReservationIsPresent(Long id) {
+        return  reservationRepository.existsById(id);
+    }
+
     public List<UserReservationView> getReservationsByUserId(Long id) {
         return reservationRepository.findReservationsByUserId(id);
     }
@@ -36,29 +40,15 @@ public class ReservationService {
     }
 
     @Transactional
-    public Reservation saveReservation(Long userId, Long spaceId, LocalDate reservationDate, Boolean reservationStatus) {
-        if(checkSpaceStatus(spaceId, reservationDate)) {
-            return null;
-        }
-
-        Reservation reservation = new Reservation();
-        reservation.setUserId(userId);
-        reservation.setSpaceId(spaceId);
-        reservation.setReservationDate(reservationDate);
-        reservation.setReservationStatus(reservationStatus);
+    public Reservation saveReservation(Reservation reservation) {
         return reservationRepository.save(reservation);
-    }
-
-    @Transactional
-    public void updateReservationStatus(Reservation reservation) {
-        reservationRepository.save(reservation);
     }
 
     public List<Reservation> getReservationsByFloorIdAndDate(Long floorId, LocalDate date) {
         return reservationRepository.findReservationByFloorIdAndReservationDate(floorId, date);
     }
 
-    public List<ReservationDetailsView> getAllReservationsWithInformationDetails(LocalDate reservationStartDate, LocalDate reservationEndDate) {
+    public List<ReservationDetailsView> getAllReservationDetailsByDateRange(LocalDate reservationStartDate, LocalDate reservationEndDate) {
         return reservationRepository.findAllReservationsWithInformationDetails(reservationStartDate, reservationEndDate);
     }
 }

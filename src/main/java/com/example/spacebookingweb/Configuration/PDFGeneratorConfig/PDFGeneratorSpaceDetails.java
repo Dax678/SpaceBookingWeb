@@ -1,4 +1,4 @@
-package com.example.spacebookingweb.Configuration;
+package com.example.spacebookingweb.Configuration.PDFGeneratorConfig;
 
 import com.example.spacebookingweb.Database.Entity.Space;
 import com.lowagie.text.Document;
@@ -105,7 +105,7 @@ public class PDFGeneratorSpaceDetails {
         for (Space space : spaceList) {
             table.addCell(String.valueOf(space.getId()));
             table.addCell(space.getName());
-            table.addCell(space.getType());
+            table.addCell(space.getType().name());
             table.addCell(String.valueOf(space.getMonitorNumber()));
             table.addCell(space.getIsHeightAdjustable() ? "Tak" : "Nie");
             table.addCell(space.getIsAvailable() ? "Aktywne" : "Wylaczone");

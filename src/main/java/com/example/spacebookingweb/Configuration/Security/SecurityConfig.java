@@ -3,6 +3,7 @@ package com.example.spacebookingweb.Configuration.Security;
 import com.example.spacebookingweb.Configuration.Security.auth.jwt.AuthEntryPointJwt;
 import com.example.spacebookingweb.Configuration.Security.auth.jwt.AuthTokenFilter;
 import com.example.spacebookingweb.Configuration.Security.auth.service.UserDetailsServiceImpl;
+import com.example.spacebookingweb.Database.Entity.ERole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +27,7 @@ public class SecurityConfig {
 
     UserDetailsServiceImpl userDetailsService;
 
-    private AuthEntryPointJwt unauthorizedHandler;
+    private final AuthEntryPointJwt unauthorizedHandler;
 
     @Autowired
     public SecurityConfig(UserDetailsServiceImpl userDetailsService, AuthEntryPointJwt unauthorizedHandler) {
@@ -67,7 +68,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/api/test/all").permitAll()
-                                .requestMatchers("/api/test/user").hasAnyRole("USER")
+                                .requestMatchers("/api/test/user").hasAnyRole(ERole.USER.getRoleNameWithoutPrefix())
                                 .requestMatchers(
                                         //API FLOOR
                                         "/api/floor",
@@ -90,14 +91,14 @@ public class SecurityConfig {
                                         "/api/user/{id}/reservations",
                                         "/api/user/{id}/reservations/{status}",
                                         "/api/user/{id}/details"
-                                ).hasAnyRole("USER", "ADMIN")
+                                ).hasAnyRole(ERole.USER.getRoleNameWithoutPrefix(), ERole.ADMIN.getRoleNameWithoutPrefix())
                                 .requestMatchers(
                                         "/api/test/admin",
                                         "/api/reservation/details",
                                         "/api/reservation/details/filePDF",
                                         "/api/space/floor/{id}",
                                         "/api/space/floor/{id}/filePDF"
-                                ).hasRole("ADMIN")
+                                ).hasRole(ERole.ADMIN.getRoleNameWithoutPrefix())
                         .anyRequest().authenticated()
                 );
 

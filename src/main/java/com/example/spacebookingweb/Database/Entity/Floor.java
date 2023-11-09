@@ -2,33 +2,40 @@ package com.example.spacebookingweb.Database.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.util.List;
 
 @RequiredArgsConstructor
-@Getter
-@Setter
-@ToString
+@Data
 @Entity
 @Table(name = "floor", schema = "public")
 public class Floor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @Column(name = "floor_num")
+    @NotNull
     private String floorNum;
 
-    //IT, HR, Finance, Parking - 4 types
     @Column(name = "name")
-    private String name;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private EFloor name;
 
     @OneToMany(mappedBy = "floor")
     @JsonIgnore
     private List<Space> spaceList;
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "floorNum = " + floorNum + ", " +
+                "name = " + name + ")";
+    }
 }

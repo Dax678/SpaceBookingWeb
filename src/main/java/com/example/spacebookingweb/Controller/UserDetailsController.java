@@ -2,10 +2,12 @@ package com.example.spacebookingweb.Controller;
 
 import com.example.spacebookingweb.Database.Entity.UserDetails;
 import com.example.spacebookingweb.Service.UserDetailsService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import com.example.spacebookingweb.payload.response.MessageResponse;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,22 +17,19 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
+@Validated
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 public class UserDetailsController {
     UserDetailsService userDetailsService;
 
-    @Operation(
-            summary = "Get user details by ID",
-            description = "Get user details by ID. It returns ResponseEntity<UserDetails>",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "User details"),
-                    @ApiResponse(responseCode = "404", description = "User not found")
-            }
-    )
     @GetMapping("/api/user/getDetails/{id}")
-    public ResponseEntity<UserDetails> getUserDetailsById(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getUserDetailsById(@PathVariable("id") @Min(value = 1, message = "ID must be greater than or equal to 1") Long id) {
         Optional<UserDetails> optionalUserDetails = userDetailsService.getUserDetailsById(id);
 
-        return optionalUserDetails.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        if(optionalUserDetails.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(optionalUserDetails);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("User details with id: " + id + " not found"));
+        }
     }
 }
