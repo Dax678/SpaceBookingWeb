@@ -18,9 +18,14 @@ const getDisabledSpaces = async (bool) => {
         .get(API_URL + "isAvailable/" + bool, { headers: authHeader() });
 }
 
-const changeSpaceStatus = async (spaceId, newStatus) => {
+const changeSpaceStatus = async (spaceId, floorId, name, type, monitorNumber, isHeightAdjustable, isAvailable) => {
     return axios.put(API_URL + spaceId, {
-        newStatus
+        floorId,
+        name,
+        type,
+        monitorNumber,
+        isHeightAdjustable,
+        isAvailable
       }, { headers: authHeader() });
 }
 

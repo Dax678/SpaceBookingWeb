@@ -5,6 +5,7 @@ import com.example.spacebookingweb.Database.Entity.Reservation;
 import com.example.spacebookingweb.Database.View.ReservationDetailsView;
 import com.example.spacebookingweb.Service.ReservationService;
 import com.example.spacebookingweb.payload.response.MessageResponse;
+import com.example.spacebookingweb.payload.response.ObjectMessageResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -44,7 +45,7 @@ public class ReservationController {
     public ResponseEntity<?> getReservationById(@PathVariable("id") @Min(value = 1, message = "ID must be greater than or equal to 1") Long id) {
         Optional<Reservation> optionalReservation = reservationService.getReservationById(id);
 
-        if(optionalReservation.isPresent()) {
+        if (optionalReservation.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(optionalReservation);
         } else {
@@ -56,14 +57,14 @@ public class ReservationController {
     @PostMapping
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> addReservation(@Valid @RequestBody Reservation reservation) {
-        if(reservationService.checkSpaceStatus(reservation.getSpaceId(), reservation.getReservationDate())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        if (reservationService.checkSpaceStatus(reservation.getSpaceId(), reservation.getReservationDate())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(new MessageResponse("Reservation is already booked."));
         }
 
         try {
             reservation = reservationService.saveReservation(reservation);
-            return new ResponseEntity<>(reservation, HttpStatus.OK);
+            return new ResponseEntity<>(new ObjectMessageResponse<Reservation>("Reservation has been successfully added.", reservation), HttpStatus.OK);
         } catch (Exception e) {
             LOGGER.log(Level.ERROR, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -75,16 +76,16 @@ public class ReservationController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> updateReservationStatus(@PathVariable(value = "id") @Min(value = 1, message = "ID must be greater than or equal to 1") Long reservationId,
                                                      @PathVariable("bool") @NotNull @Pattern(regexp = "true|false", message = "Status should be true or false") String status) {
-        if(!reservationService.checkReservationIsPresent(reservationId))
+        if (!reservationService.checkReservationIsPresent(reservationId))
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new MessageResponse("Reservation with id: " + reservationId + " not found."));
+                    .body(new MessageResponse("Reservation with id: " + reservationId + " not found."));
 
         Optional<Reservation> reservationOptional = reservationService.getReservationById(reservationId);
 
         try {
             reservationOptional.get().setReservationStatus(Boolean.valueOf(status));
-            return new ResponseEntity<>(reservationService.saveReservation(reservationOptional.get()), HttpStatus.OK);
-        } catch(Exception e) {
+            return new ResponseEntity<>(new ObjectMessageResponse<Reservation>("Reservation status has been successfully updated.", reservationService.saveReservation(reservationOptional.get())), HttpStatus.OK);
+        } catch (Exception e) {
             LOGGER.log(Level.ERROR, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new MessageResponse("A problem occurred during updating reservation."));
@@ -94,7 +95,7 @@ public class ReservationController {
     @GetMapping("/details")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllReservationDetailsByDateRange(@RequestParam("reservationStartDate") LocalDate reservationStartDate,
-                                                                      @RequestParam("reservationEndDate") LocalDate reservationEndDate) {
+                                                                 @RequestParam("reservationEndDate") LocalDate reservationEndDate) {
         List<ReservationDetailsView> reservationList = reservationService.getAllReservationDetailsByDateRange(reservationStartDate, reservationEndDate);
 
         if (!reservationList.isEmpty()) {
@@ -108,12 +109,25 @@ public class ReservationController {
 
     @GetMapping("/details/filePDF")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<byte[]> generatePDF(@RequestParam("reservationStartDate") LocalDate reservationStartDate,
-                                              @RequestParam("reservationEndDate") LocalDate reservationEndDate) throws IOException {
+    public ResponseEntity<?> generatePDF(@RequestParam("reservationStartDate") LocalDate reservationStartDate,
+                                         @RequestParam("reservationEndDate") LocalDate reservationEndDate) {
+
+        List<ReservationDetailsView> reservationList = reservationService.getAllReservationDetailsByDateRange(reservationStartDate, reservationEndDate);
+
+        if (reservationList.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new MessageResponse("Reservation not found."));
+        }
 
         PDFGeneratorReservationDetails generator = new PDFGeneratorReservationDetails();
-        generator.setReservationDetailsViewList(reservationService.getAllReservationDetailsByDateRange(reservationStartDate, reservationEndDate));
-        byte[] pdfBytes = generator.generate(reservationStartDate, reservationEndDate);
+        generator.setReservationDetailsViewList(reservationList);
+        byte[] pdfBytes;
+        try {
+            pdfBytes = generator.generate(reservationStartDate, reservationEndDate);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new MessageResponse("A problem occurred during generating PDF."));
+        }
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);

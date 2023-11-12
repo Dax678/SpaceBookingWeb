@@ -1,12 +1,14 @@
 package com.example.spacebookingweb.payload.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public class LoginRequest {
-    @NotBlank
+    @NotBlank(message = "Username cannot be blank")
     private String username;
 
-    @NotBlank
+    @NotBlank(message="Password cannot be blank")
     private String password;
 
     public LoginRequest(String username, String password) {

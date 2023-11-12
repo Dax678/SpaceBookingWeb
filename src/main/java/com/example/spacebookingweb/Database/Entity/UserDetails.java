@@ -22,11 +22,11 @@ public class UserDetails {
     private Long userId;
     @Column
     @NotNull
-    @Size(min = 2, max = 10)
+    @Size(min = 2, max = 30)
     private String name;
     @Column
     @NotNull
-    @Size(min = 2, max = 12)
+    @Size(min = 2, max = 30)
     private String surname;
     @Column
     @NotNull

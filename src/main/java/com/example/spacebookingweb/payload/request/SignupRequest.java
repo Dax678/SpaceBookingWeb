@@ -15,29 +15,32 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class SignupRequest {
     @NotBlank
-    @Size(min = 3, max = 20)
+    @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters long")
     private String username;
 
     @NotBlank
-    @Pattern(regexp = "^(?=.*\\d)(?=.*[A-Z]).{6,}$")
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[A-Z]).{6,}$", message = "Password must contain at least one number and one uppercase letter and one lowercase letter.")
     private String password;
 
     @NotBlank
-    @Size(max = 50)
-    @Email
+    @Size(min = 3, max = 50, message = "Username must be between 3 and 20 characters long")
+    @Email(message = "Email must be a valid email")
     private String email;
 
     @NotBlank
+    @Size(min = 2, max = 30, message = "Name must be between 2 and 30 characters long")
     private String name;
 
     @NotBlank
+    @Size(min = 2, max = 30, message = "Surname must be between 2 and 30 characters long")
     private String surname;
 
     @NotBlank
-    @Pattern(regexp="(^$|[0-9]{9})")
+    @Pattern(regexp="(^$|[0-9]{9})", message = "Phone number must be a valid phone number")
     private String phoneNumber;
 
     @NotBlank
+    @Size(min = 5, max = 40, message = "Address must be between 5 and 40 characters long")
     private String address;
 
     private Set<String> role;

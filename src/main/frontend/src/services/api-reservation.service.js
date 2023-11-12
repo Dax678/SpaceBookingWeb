@@ -3,19 +3,17 @@ import authHeader from "./auth-header";
 
 const API_URL = "http://localhost:8080/api/reservation";
 
-const bookSpace = (userId, spaceId, date, reservationStatus) => {
+const bookSpace = (userId, spaceId, reservationDate, reservationStatus) => {
     return axios.post(API_URL, {
       userId,
       spaceId,
-      date,
+      reservationDate,
       reservationStatus
     }, { headers: authHeader() });
   };
 
 const changeBookingStatus = (bookingStatus, reservationId) => {
-  return axios.put(API_URL + "/" + reservationId, {
-    bookingStatus
-  }, { headers: authHeader() });
+  return axios.put(API_URL + "/" + reservationId + "/status/" + bookingStatus, null, { headers: authHeader() });
 };
 
 const getReservationDetails = async (startDate, endDate) => {

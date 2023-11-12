@@ -21,7 +21,7 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    @Size(min = 3, max = 12)
+    @Size(min = 3, max = 20)
     @Column(name = "username", unique = true)
     @NotBlank
     private String username;

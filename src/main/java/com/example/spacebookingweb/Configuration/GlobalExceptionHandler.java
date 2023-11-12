@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
 
     private Map<String, String> getErrorsMap(String error) {
             Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", error);
+            errorResponse.put("message", error);
             return errorResponse;
     }
 }

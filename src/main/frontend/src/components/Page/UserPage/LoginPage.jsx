@@ -17,15 +17,20 @@ const required = (value) => {
 };
 
 const LoginPage = () => {
-  let navigate = useNavigate();
-
   const form = useRef();
   const checkBtn = useRef();
 
+  // Login data
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  // Messages from server
+  const [showErrorModal, setErrorShowModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // Navigation
+  let navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
 
   const onChangeUsername = (e) => {
     const username = e.target.value;
@@ -37,10 +42,10 @@ const LoginPage = () => {
     setPassword(password);
   };
 
+  // Login handler
   const handleLogin = (e) => {
     e.preventDefault();
-
-    setMessage("");
+    setErrorMessage(false);
     setLoading(true);
 
     if (checkBtn.current.context._errors.length === 0) {
@@ -50,15 +55,9 @@ const LoginPage = () => {
           window.location.reload();
         },
         (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-
+          setErrorMessage(error.response.data.message);
+          setErrorShowModal(true);
           setLoading(false);
-          setMessage(resMessage);
         }
       );
     } else {
@@ -111,10 +110,10 @@ const LoginPage = () => {
                         </button>
                         <hr></hr>
                       </div>
-                      {message && (
+                      {showErrorModal && (
                         <div className="form-group">
                           <div className="alert alert-danger" role="alert">
-                            {message}
+                            {errorMessage}
                           </div>
                         </div>
                       )}

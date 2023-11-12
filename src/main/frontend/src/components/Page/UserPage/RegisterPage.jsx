@@ -7,6 +7,7 @@ import {Button, Container, Modal} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 
 
+// Validation schema
 const validationSchema = Yup.object({
     username: Yup.string()
         .min(3, 'Minimum 3 znaki')
@@ -24,7 +25,7 @@ const validationSchema = Yup.object({
         .min(3, 'Minimum 6 znaków')
         .required('To pole jest wymagane'),
     phoneNumber: Yup.string()
-        .min(8, 'Minimum 6 znaków')
+        .min(9, 'Minimum 9 znaków')
         .required('To pole jest wymagane'),
     address: Yup.string()
         .min(6, 'Minimum 6 znaków')
@@ -32,9 +33,16 @@ const validationSchema = Yup.object({
 });
 
 const RegisterPage = () => {
-    const [successful, setSuccessful] = useState(false);
+    // Messages from the server
+    const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+
+    // Modals
     const [showSuccessModal, setSuccessShowModal] = useState(false);
-    const [message, setMessage] = useState("");
+    const [showErrorModal, setErrorShowModal] = useState(false);
+    const [showInformationModal, setInformationModal] = useState(false);
+
+    // Navigation
     let navigate = useNavigate();
 
     const formik = useFormik({
@@ -59,29 +67,34 @@ const RegisterPage = () => {
                 values.address
             ).then(
                 (response) => {
-                    setMessage(response.data.message);
+                    setSuccessMessage(response.data.message);
                     setSuccessShowModal(true);
                 },
                 (error) => {
-                    const resMessage =
-                        (error.response &&
-                            error.response.data &&
-                            error.response.data.message) ||
-                        error.message ||
-                        error.toString();
-
-                    setMessage(resMessage);
+                    if(error.response && error.response.status === 400) {
+                        setErrorMessage(error.response.data.message);
+                        setInformationModal(true);
+                    } else {
+                        setErrorMessage(error.response.data.message);
+                        setErrorShowModal(true);
+                    }
                 }
             );
         },
     });
 
-    const handleCloseModal = () => {
-        setSuccessShowModal(false);
-        navigate("/login");
+    //Modal
+    const handleNavigationHomePage = () => {
+        navigate("/landing-page");
         window.location.reload();
-    };
+    }
 
+    // Navigation: Reload the page
+    const handleNavigationReloadPage = () => {
+        window.location.reload();
+    }
+
+    // Modal settings
     return (
         <Container>
         <div className="row justify-content-center">
@@ -224,17 +237,12 @@ const RegisterPage = () => {
                                             </div>
                                             <hr/>
                                         </div>
-                                        {message && (
+                                        {showInformationModal && (
                                             <div className="form-group">
                                                 <div
-                                                    className={
-                                                        successful
-                                                            ? "alert alert-success"
-                                                            : "alert alert-danger"
-                                                    }
-                                                    role="alert"
-                                                >
-                                                    {message}
+                                                    className="alert alert-danger"
+                                                    role="alert">
+                                                    {errorMessage}
                                                 </div>
                                             </div>
                                         )}
@@ -251,19 +259,40 @@ const RegisterPage = () => {
                 </div>
             </div>
         </div>
-    <Modal show={showSuccessModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-            <Modal.Title>Konto zostało utworzone</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-            Twoje konto zostało utworzone. Kliknij poniższy przycisk lub zamknij ten modal, aby przejść na stronę logowania.
-        </Modal.Body>
-        <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModal}>
-                Idź na Stronę Logowania
-            </Button>
-        </Modal.Footer>
-    </Modal>
+            <Modal show={showSuccessModal} onHide={handleNavigationReloadPage}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Space has been reserved</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {successMessage}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleNavigationHomePage}>
+                        Go to Home Page
+                    </Button>
+                    <Button variant="primary" onClick={handleNavigationReloadPage}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <Modal show={showErrorModal} onHide={handleNavigationReloadPage}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Error</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <b>Error message:</b><br/> {errorMessage}<br/>
+                    <b>More informations:</b><br/>
+                    Please reload the page. If the problem persists, please contact the administrator.
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleNavigationHomePage}>
+                        Go to Home Page
+                    </Button>
+                    <Button variant="danger" onClick={handleNavigationReloadPage}>
+                        Reload Page
+                    </Button>
+                </Modal.Footer>
+            </Modal>
     </Container>
     );
 };

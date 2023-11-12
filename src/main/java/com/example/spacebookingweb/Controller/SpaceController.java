@@ -6,6 +6,7 @@ import com.example.spacebookingweb.Database.Entity.Space;
 import com.example.spacebookingweb.Service.FloorService;
 import com.example.spacebookingweb.Service.SpaceService;
 import com.example.spacebookingweb.payload.response.MessageResponse;
+import com.example.spacebookingweb.payload.response.ObjectMessageResponse;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -76,7 +77,7 @@ public class SpaceController {
         try {
             space.setId(id);
             spaceService.updateSpace(space);
-            return ResponseEntity.status(HttpStatus.OK).body(space);
+            return ResponseEntity.status(HttpStatus.OK).body(new ObjectMessageResponse<Space>("Space has been successfully updated.", space));
         } catch (Exception e) {
             LOGGER.log(Level.ERROR, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("A problem occurred during updating space."));

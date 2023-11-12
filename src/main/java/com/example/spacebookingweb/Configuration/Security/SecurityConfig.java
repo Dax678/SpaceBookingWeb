@@ -84,6 +84,7 @@ public class SecurityConfig {
                                         // API RESERVATION
                                         "/api/reservation",
                                         "/api/reservation/{id}",
+                                        "/api/reservation/{id}/status/{bool}",
                                         //API USER
                                         "/api/user",
                                         "/api/user/{id}",

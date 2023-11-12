@@ -1,5 +1,6 @@
 package com.example.spacebookingweb.IntegrationTests.Auth;
 
+import com.example.spacebookingweb.Configuration.Security.auth.service.UserDetailsImpl;
 import com.example.spacebookingweb.Database.Entity.ERole;
 import com.example.spacebookingweb.Database.Entity.User;
 import com.example.spacebookingweb.Database.Entity.UserDetails;
@@ -72,9 +73,14 @@ class AuthControllerTest {
         user.setUsername("testuser");
         user.setPassword("Testpassword1");
         user.setEmail("testemail@test.com");
-        user.setRole(ERole.ROLE_USER.getRoleName());
+        user.setRole(ERole.USER.getRoleNameWithPrefix());
 
-        when(authenticationManager.authenticate(any())).thenReturn(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        UserDetailsImpl userDetails = UserDetailsImpl.build(user);
+
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+        when(authenticationManager.authenticate(any())).thenReturn(authentication);
+
 
         when(userService.getUserByUsername("testuser")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("Testpassword1", "Testpassword1")).thenReturn(true);

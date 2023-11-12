@@ -7,6 +7,7 @@ import com.example.spacebookingweb.Database.View.UserReservationView;
 import com.example.spacebookingweb.Service.ReservationService;
 import com.example.spacebookingweb.Service.UserService;
 import com.example.spacebookingweb.payload.response.MessageResponse;
+import com.example.spacebookingweb.payload.response.ObjectMessageResponse;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -64,7 +65,7 @@ public class UserController {
     @GetMapping("/{id}/reservations")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getUserReservationsList(@PathVariable("id") @Min(value = 1, message = "ID must be greater than or equal to 1") Long id) {
-        if(userService.checkUserIsPresent(id)) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("User with id: " + id + " not found."));
+        if(!userService.checkUserIsPresent(id)) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("User with id: " + id + " not found."));
 
         List<UserReservationView> reservationList = reservationService.getReservationsByUserId(id);
 
@@ -79,7 +80,7 @@ public class UserController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getUserReservationListByStatus(@PathVariable("id") @Min(value = 1, message = "ID must be greater than or equal to 1") Long id,
                                                             @PathVariable("status")  @NotNull @Pattern(regexp = "true|false", message = "Status should be true or false") String status) {
-        if(userService.checkUserIsPresent(id)) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("User with id: " + id + " not found."));
+        if(!userService.checkUserIsPresent(id)) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("User with id: " + id + " not found."));
 
         List<UserReservationView> reservationList = reservationService.getUserReservationListByStatus(id, Boolean.valueOf(status));
 
@@ -102,7 +103,7 @@ public class UserController {
         user.setRole(ERole.USER.getRoleNameWithPrefix());
 
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(userService.saveUser(user));
+            return ResponseEntity.status(HttpStatus.OK).body(new ObjectMessageResponse<User>("User has been successfully added.", userService.saveUser(user)));
         } catch (Exception e) {
             LOGGER.log(Level.ERROR, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving user.");
@@ -112,7 +113,7 @@ public class UserController {
     @GetMapping("/{id}/details")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getUserInformations(@PathVariable("id") @Min(value = 1, message = "ID must be greater than or equal to 1") Long id) {
-        if(userService.checkUserIsPresent(id)) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("User with id: " + id + " not found."));
+        if(!userService.checkUserIsPresent(id)) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("User with id: " + id + " not found."));
 
         Optional<UserInformationView> userInformationViewOptional = userService.getUserInformationByUserId(id);
 

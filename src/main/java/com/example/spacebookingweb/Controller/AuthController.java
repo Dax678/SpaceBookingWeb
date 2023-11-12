@@ -13,6 +13,7 @@ import com.example.spacebookingweb.payload.request.LoginRequest;
 import com.example.spacebookingweb.payload.request.SignupRequest;
 import com.example.spacebookingweb.payload.response.JwtResponse;
 import com.example.spacebookingweb.payload.response.MessageResponse;
+import com.example.spacebookingweb.payload.response.ObjectMessageResponse;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +58,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        if(userService.getUserByUsername(loginRequest.getUsername()).isEmpty()) return new ResponseEntity<>(new MessageResponse("User with login: " + loginRequest.getUsername() + " does not exist."), HttpStatus.NOT_FOUND);
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -110,7 +112,7 @@ public class AuthController {
         savedUser = userService.saveUser(savedUser);
 
         if (savedUser != null && savedUserDetails != null) {
-            return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+            return ResponseEntity.ok(new ObjectMessageResponse<User>("User registered successfully!", savedUser));
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("Error saving user."));
         }
