@@ -29,11 +29,16 @@ public class FloorController {
     FloorService floorService;
     ReservationService reservationService;
 
+    /**
+     * @return List of all floor
+     */
     @GetMapping
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getFloorList() {
         List<Floor> floorList = floorService.getAll();
 
+        // List should always have a data set
+        // If there is no data found, return a 404
         if (!floorList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(floorList);
         } else {
@@ -41,6 +46,10 @@ public class FloorController {
         }
     }
 
+    /**
+     * @param id ID of the floor
+     * @return Floor with the given ID
+     */
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getFloorById(@PathVariable("id") @Min(value = 1, message = "ID must be greater than or equal to 1") Long id) {
@@ -53,6 +62,12 @@ public class FloorController {
             }
     }
 
+
+    /**
+     * @param id the ID of the floor
+     * @param date the date of the reservation
+     * @return List of all reservations for the given floor and date
+     */
     @GetMapping(value = "/{id}/reservations/{date}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getFloorReservationsByFloorIdAndDate(@PathVariable("id") @Min(value = 1, message = "ID must be greater than or equal to 1") Long id,
@@ -61,10 +76,6 @@ public class FloorController {
 
         List<Reservation> reservationList = reservationService.getReservationsByFloorIdAndDate(id, date);
 
-        if (!reservationList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(reservationList);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Reservations not found"));
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(reservationList);
     }
 }

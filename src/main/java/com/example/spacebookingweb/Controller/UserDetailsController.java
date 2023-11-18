@@ -22,6 +22,10 @@ import java.util.Optional;
 public class UserDetailsController {
     UserDetailsService userDetailsService;
 
+    /**
+     * @param id the ID of the user
+     * @return User details with the given ID
+     */
     @GetMapping("/api/user/getDetails/{id}")
     public ResponseEntity<?> getUserDetailsById(@PathVariable("id") @Min(value = 1, message = "ID must be greater than or equal to 1") Long id) {
         Optional<UserDetails> optionalUserDetails = userDetailsService.getUserDetailsById(id);

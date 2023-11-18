@@ -40,6 +40,7 @@ public class User {
 
     @OneToOne(cascade = CascadeType.ALL) // Dodaj kaskadową operację
     @JoinColumn(name = "user_details_id") // Odnoś się do kolumny user_details_id
+    @JsonIgnore
     private UserDetails userDetails;
 
     @OneToMany(mappedBy = "user")

@@ -32,12 +32,15 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 public class UserController {
 
-    private static final Logger LOGGER = LogManager.getLogger(ReservationController.class);
+    private static final Logger LOGGER = LogManager.getLogger(UserController.class);
 
     UserService userService;
     ReservationService reservationService;
 
-    //Get user by id
+    /**
+     * @param id the ID of the user
+     * @return User with the given ID
+     */
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getUserById(@PathVariable("id") @Min(value = 1, message = "ID must be greater than or equal to 1") Long id) {
@@ -50,6 +53,10 @@ public class UserController {
         }
     }
 
+    /**
+     * @param username the username of the user
+     * @return User with the given username
+     */
     @GetMapping("/name/{username}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getUserByUsername(@PathVariable("username") String username) {
@@ -58,10 +65,14 @@ public class UserController {
         if(optionalUser.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK).body(optionalUser.get());
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("User with username: + " + username + " not found."));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("User with username: " + username + " not found."));
         }
     }
 
+    /**
+     * @param id the ID of the user
+     * @return The list of the reservations of the user with the given ID
+     */
     @GetMapping("/{id}/reservations")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getUserReservationsList(@PathVariable("id") @Min(value = 1, message = "ID must be greater than or equal to 1") Long id) {
@@ -69,13 +80,14 @@ public class UserController {
 
         List<UserReservationView> reservationList = reservationService.getReservationsByUserId(id);
 
-        if (!reservationList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(reservationList);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Reservation not found."));
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(reservationList);
     }
 
+    /**
+     * @param id the ID of the user
+     * @param status the status of the reservation
+     * @return The list of the reservations of the user with the given ID and status
+     */
     @GetMapping("/{id}/reservations/{status}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getUserReservationListByStatus(@PathVariable("id") @Min(value = 1, message = "ID must be greater than or equal to 1") Long id,
@@ -84,13 +96,15 @@ public class UserController {
 
         List<UserReservationView> reservationList = reservationService.getUserReservationListByStatus(id, Boolean.valueOf(status));
 
-        if (!reservationList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(reservationList);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Reservation not found."));
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(reservationList);
     }
 
+    /**
+     * @param username the username of the user
+     * @param password the password of the user
+     * @param email the email of the user
+     * @return Saved user with the message response
+     */
     @PostMapping
     public ResponseEntity<?> addUser(@RequestParam(value = "username") String username,
                                           @RequestParam(value = "password") String password,
@@ -110,6 +124,10 @@ public class UserController {
         }
     }
 
+    /**
+     * @param id the ID of the user
+     * @return Details of the user with the given ID
+     */
     @GetMapping("/{id}/details")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getUserInformations(@PathVariable("id") @Min(value = 1, message = "ID must be greater than or equal to 1") Long id) {

@@ -15,8 +15,9 @@ import com.example.spacebookingweb.payload.response.JwtResponse;
 import com.example.spacebookingweb.payload.response.MessageResponse;
 import com.example.spacebookingweb.payload.response.ObjectMessageResponse;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 public class AuthController {
-    private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
+    private static final Logger LOGGER = LogManager.getLogger(AuthEntryPointJwt.class);
 
     AuthenticationManager authenticationManager;
     UserRepository userRepository;
@@ -56,6 +57,10 @@ public class AuthController {
         this.userService = userService;
     }
 
+    /**
+     * @param loginRequest - login request
+     * @return JWT token
+     */
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         if(userService.getUserByUsername(loginRequest.getUsername()).isEmpty()) return new ResponseEntity<>(new MessageResponse("User with login: " + loginRequest.getUsername() + " does not exist."), HttpStatus.NOT_FOUND);
@@ -78,6 +83,10 @@ public class AuthController {
                 roles));
     }
 
+    /**
+     * @param signUpRequest - sign up request
+     * @return Saved user with message response || Error message response
+     */
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         // Sprawdź, czy istnieją użytkownicy o takim samym username lub email
@@ -108,12 +117,18 @@ public class AuthController {
 
         UserDetails savedUserDetails = userDetailsService.saveUserDetails(userDetails);
 
-        savedUser.setUserDetails(savedUserDetails);
-        savedUser = userService.saveUser(savedUser);
+        try {
+            savedUser.setUserDetails(savedUserDetails);
+            savedUser = userService.saveUser(savedUser);
 
-        if (savedUser != null && savedUserDetails != null) {
-            return ResponseEntity.ok(new ObjectMessageResponse<User>("User registered successfully!", savedUser));
-        } else {
+            if (savedUser != null && savedUserDetails != null) {
+                return ResponseEntity.ok(new ObjectMessageResponse<User>("User registered successfully!", savedUser));
+            } else {
+                LOGGER.log(Level.ERROR, "Error saving user.");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("Error saving user."));
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.ERROR, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("Error saving user."));
         }
     }

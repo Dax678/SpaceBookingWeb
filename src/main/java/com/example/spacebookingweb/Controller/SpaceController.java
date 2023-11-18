@@ -39,16 +39,21 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 public class SpaceController {
 
-    private static final Logger LOGGER = LogManager.getLogger(ReservationController.class);
+    private static final Logger LOGGER = LogManager.getLogger(SpaceController.class);
 
     SpaceService spaceService;
     FloorService floorService;
 
+    /**
+     * @return List of all spaces
+     */
     @GetMapping
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getSpaceList() {
         List<Space> spaceList= spaceService.getSpaceList();
 
+        // List should always have a data set
+        // If there is no data found, return a 404
         if (!spaceList.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(spaceList);
         } else {
@@ -56,6 +61,10 @@ public class SpaceController {
         }
     }
 
+    /**
+     * @param id the ID of the space
+     * @return Space with the given ID
+     */
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getSpaceById(@PathVariable("id") @Min(value = 1, message = "ID must be greater than or equal to 1") Long id) {
@@ -68,6 +77,11 @@ public class SpaceController {
        }
     }
 
+    /**
+     * @param id the ID of the space
+     * @param space Request body for updating the space
+     * @return Updated space with the given ID
+     */
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateSpace(@PathVariable("id") @Min(value = 1, message = "ID must be greater than or equal to 1") long id,
@@ -78,12 +92,16 @@ public class SpaceController {
             space.setId(id);
             spaceService.updateSpace(space);
             return ResponseEntity.status(HttpStatus.OK).body(new ObjectMessageResponse<Space>("Space has been successfully updated.", space));
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             LOGGER.log(Level.ERROR, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("A problem occurred during updating space."));
         }
     }
 
+    /**
+     * @param floorId the ID of the space
+     * @return List of all spaces in the given floor
+     */
     @GetMapping("/floor/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getSpaceByFloorId(@PathVariable("id") @Min(value = 1, message = "ID must be greater than or equal to 1") Long floorId) {
@@ -91,13 +109,13 @@ public class SpaceController {
 
         List<Space> spaceList = spaceService.getSpaceByFloorId(floorId);
 
-        if (!spaceList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(spaceList);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("The given floorId: " + floorId + " does not have any spaces."));
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(spaceList);
     }
 
+    /**
+     * @param floorId the ID of the floor
+     * @return ResponseEntity with the PDF of the space details
+     */
     @GetMapping("/floor/{id}/filePDF")
     @PreAuthorize("hasRole('ADMIN')")
     //TODO: Przetestowac
@@ -118,45 +136,51 @@ public class SpaceController {
         return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
     }
 
+    /**
+     * @param type the type of the space
+     * @return List of all spaces with the given type
+     */
     @GetMapping("/type/{type}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getSpaceListByType(@PathVariable("type") @Pattern(regexp = "Standard|Tech|Room|Motorbikes", message = "Type should be Standard or Tech or Room or Motorbikes") String type) {
         List<Space> spaceList = spaceService.getSpaceByType(ESpace.valueOf(type));
 
-        if (!spaceList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(spaceList);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("The given type: " + type + " does not have any spaces."));
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(spaceList);
     }
 
+    /**
+     * @param bool the status of the space
+     * @return List of all spaces with the given status
+     */
     @GetMapping("/heightAdjustable/{bool}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getSpaceListByIsHeightAdjustable(@PathVariable("bool") @NotNull @Pattern(regexp = "true|false", message = "Status should be true or false") String bool) {
         List<Space> spaceList = spaceService.getSpaceByIsHeightAdjustable(Boolean.valueOf(bool));
 
-        if (!spaceList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(spaceList);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Space with parameter is_height_adjustable: " + bool + " not found."));
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(spaceList);
     }
 
+    /**
+     * @param bool the status of the space
+     * @return List of all spaces with the given status
+     */
     @GetMapping("/isAvailable/{bool}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getSpacesByIsAvailable(@PathVariable("bool") @NotNull @Pattern(regexp = "true|false", message = "Status should be true or false") String bool) {
         List<Space> spaceList = spaceService.getSpacesByIsAvailable(Boolean.valueOf(bool));
 
-        if (!spaceList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(spaceList);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Space with parameter is_available: " + bool + " not found."));
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(spaceList);
     }
 
+    /**
+     * @param id the ID of the floor
+     * @param type the type of the space
+     * @param date the date of the space
+     * @param status the status of the space
+     * @return List of all spaces with the given parameters
+     */
     @GetMapping("/{id}/{type}/{date}/{status}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    @Validated
     public ResponseEntity<?> getSpaceListByFloorIdAndType(@PathVariable(value = "id") @Min(value = 1, message = "ID must be greater than or equal to 1") Long id,
                                                           @PathVariable(value = "type") @Pattern(regexp = "Standard|Tech|Room|Motorbikes", message = "Type should be Standard or Tech or Room or Motorbikes") String type,
                                                           @PathVariable(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @JsonFormat(pattern = "yyyy/MM/dd") LocalDate date,
@@ -166,10 +190,6 @@ public class SpaceController {
 
         List<Space> spaceList = spaceService.getSpacesByFloorIdAndType(id, ESpace.valueOf(type), date, Boolean.parseBoolean(status));
 
-        if (!spaceList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(spaceList);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Space not found"));
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(spaceList);
     }
 }

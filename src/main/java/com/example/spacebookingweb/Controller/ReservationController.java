@@ -6,6 +6,7 @@ import com.example.spacebookingweb.Database.View.ReservationDetailsView;
 import com.example.spacebookingweb.Service.ReservationService;
 import com.example.spacebookingweb.payload.response.MessageResponse;
 import com.example.spacebookingweb.payload.response.ObjectMessageResponse;
+import com.lowagie.text.DocumentException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -14,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,6 +42,10 @@ public class ReservationController {
 
     ReservationService reservationService;
 
+    /**
+     * @param id ID of the reservation
+     * @return Reservation with the given ID
+     */
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getReservationById(@PathVariable("id") @Min(value = 1, message = "ID must be greater than or equal to 1") Long id) {
@@ -54,6 +60,11 @@ public class ReservationController {
         }
     }
 
+    /**
+     * @param reservation Request body of the reservation
+     * @return Reservation with the given ID
+     * @throws IllegalArgumentException
+     */
     @PostMapping
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> addReservation(@Valid @RequestBody Reservation reservation) {
@@ -65,13 +76,19 @@ public class ReservationController {
         try {
             reservation = reservationService.saveReservation(reservation);
             return new ResponseEntity<>(new ObjectMessageResponse<Reservation>("Reservation has been successfully added.", reservation), HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             LOGGER.log(Level.ERROR, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new MessageResponse("A problem occurred during saving a reservation."));
         }
     }
 
+    /**
+     * @param reservationId ID of the reservation
+     * @param status Status of the reservation
+     * @return Updated reservation with the given ID
+     * @throws IllegalArgumentException
+     */
     @PutMapping(value = "/{id}/status/{bool}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> updateReservationStatus(@PathVariable(value = "id") @Min(value = 1, message = "ID must be greater than or equal to 1") Long reservationId,
@@ -85,32 +102,37 @@ public class ReservationController {
         try {
             reservationOptional.get().setReservationStatus(Boolean.valueOf(status));
             return new ResponseEntity<>(new ObjectMessageResponse<Reservation>("Reservation status has been successfully updated.", reservationService.saveReservation(reservationOptional.get())), HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             LOGGER.log(Level.ERROR, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new MessageResponse("A problem occurred during updating reservation."));
         }
     }
 
+    /**
+     * @param reservationStartDate Start date of the reservation
+     * @param reservationEndDate End date of the reservation
+     * @return List of reservations for the given range of dates
+     * @throws IllegalArgumentException
+     */
     @GetMapping("/details")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllReservationDetailsByDateRange(@RequestParam("reservationStartDate") LocalDate reservationStartDate,
                                                                  @RequestParam("reservationEndDate") LocalDate reservationEndDate) {
         List<ReservationDetailsView> reservationList = reservationService.getAllReservationDetailsByDateRange(reservationStartDate, reservationEndDate);
 
-        if (!reservationList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(reservationList);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new MessageResponse("Reservation not found."));
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(reservationList);
     }
 
+    /**
+     * @param reservationStartDate Start date of the reservation
+     * @param reservationEndDate End date of the reservation
+     * @return ResponseEntity with the PDF of the reservation details
+     */
     @GetMapping("/details/filePDF")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> generatePDF(@RequestParam("reservationStartDate") LocalDate reservationStartDate,
-                                         @RequestParam("reservationEndDate") LocalDate reservationEndDate) {
+    public ResponseEntity<?> generatePDF(@RequestParam("reservationStartDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate reservationStartDate,
+                                         @RequestParam("reservationEndDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate reservationEndDate) {
 
         List<ReservationDetailsView> reservationList = reservationService.getAllReservationDetailsByDateRange(reservationStartDate, reservationEndDate);
 
@@ -124,7 +146,7 @@ public class ReservationController {
         byte[] pdfBytes;
         try {
             pdfBytes = generator.generate(reservationStartDate, reservationEndDate);
-        } catch (IOException e) {
+        } catch (IOException | DocumentException  e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new MessageResponse("A problem occurred during generating PDF."));
         }
