@@ -19,8 +19,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -53,8 +53,6 @@ class AuthControllerTest {
     @MockBean
     private UserDetailsService userDetailsService;
 
-    @MockBean
-    private PasswordEncoder passwordEncoder;
 
     @MockBean
     private UserRepository userRepository;
@@ -63,7 +61,6 @@ class AuthControllerTest {
     void setUp() {
     }
 
-    //TODO Nie działa, poprawić
     @Test
     void authenticateUser() throws Exception {
         LoginRequest loginRequest = new LoginRequest("testuser", "Testpassword1");
@@ -81,9 +78,7 @@ class AuthControllerTest {
 
         when(authenticationManager.authenticate(any())).thenReturn(authentication);
 
-
         when(userService.getUserByUsername("testuser")).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches("Testpassword1", "Testpassword1")).thenReturn(true);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -137,8 +132,36 @@ class AuthControllerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        String expectedResponse = "{\"message\":\"User registered successfully!\"}";
+        String expectedResponse = "{\"message\":\"User registered successfully!\",\"object\":{\"id\":1,\"username\":\"testuser\",\"password\":\"Testpassword1\",\"email\":\"testemail@test.com\",\"role\":\"ROLE_USER\"}}";
 
         assertEquals(expectedResponse, content);
+    }
+
+    @Test
+    void authenticateUser_Failure() throws Exception {
+        LoginRequest loginRequest = new LoginRequest("testuser", "Testpassword1");
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("testuser");
+        user.setPassword("Testpassword1");
+        user.setEmail("testemail@test.com");
+        user.setRole(ERole.USER.getRoleNameWithPrefix());
+
+        // Symulacja sytuacji, w której hasło jest nieprawidłowe
+        when(authenticationManager.authenticate(any()))
+                .thenThrow(new BadCredentialsException("Invalid credentials"));
+
+        when(userService.getUserByUsername("testuser")).thenReturn(Optional.of(user));
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isInternalServerError())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+
+        assertEquals("{\"message\":\"Invalid credentials\"}", content);
     }
 }
