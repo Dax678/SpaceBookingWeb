@@ -26,8 +26,8 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 public class FloorController {
 
-    FloorService floorService;
-    ReservationService reservationService;
+    private final FloorService floorService;
+    private final ReservationService reservationService;
 
     /**
      * @return List of all floor

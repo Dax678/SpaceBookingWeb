@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class FloorService {
-    FloorRepository floorRepository;
+    private final FloorRepository floorRepository;
 
     public Optional<Floor> getFloorById(Long id) {
         return floorRepository.findFloorById(id);

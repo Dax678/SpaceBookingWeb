@@ -15,7 +15,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class ReservationService {
-    ReservationRepository reservationRepository;
+    private final ReservationRepository reservationRepository;
 
     public Optional<Reservation> getReservationById(Long id) {
         return reservationRepository.findReservationById(id);

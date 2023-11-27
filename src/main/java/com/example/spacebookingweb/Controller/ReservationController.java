@@ -40,7 +40,7 @@ public class ReservationController {
 
     private static final Logger LOGGER = LogManager.getLogger(ReservationController.class);
 
-    ReservationService reservationService;
+    private final ReservationService reservationService;
 
     /**
      * @param id ID of the reservation

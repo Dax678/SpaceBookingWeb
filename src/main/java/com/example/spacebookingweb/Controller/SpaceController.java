@@ -40,9 +40,8 @@ import java.util.Optional;
 public class SpaceController {
 
     private static final Logger LOGGER = LogManager.getLogger(SpaceController.class);
-
-    SpaceService spaceService;
-    FloorService floorService;
+    private final SpaceService spaceService;
+    private final FloorService floorService;
 
     /**
      * @return List of all spaces

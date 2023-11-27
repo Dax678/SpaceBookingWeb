@@ -20,7 +20,7 @@ import java.util.Optional;
 @Validated
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 public class UserDetailsController {
-    UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     /**
      * @param id the ID of the user

@@ -38,12 +38,12 @@ import java.util.stream.Collectors;
 public class AuthController {
     private static final Logger LOGGER = LogManager.getLogger(AuthEntryPointJwt.class);
 
-    AuthenticationManager authenticationManager;
-    UserRepository userRepository;
-    UserDetailsService userDetailsService;
-    PasswordEncoder encoder;
-    JwtUtils jwtUtils;
-    UserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final UserDetailsService userDetailsService;
+    private final PasswordEncoder encoder;
+    private final JwtUtils jwtUtils;
+    private final UserService userService;
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,

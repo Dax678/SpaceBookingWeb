@@ -34,8 +34,8 @@ public class UserController {
 
     private static final Logger LOGGER = LogManager.getLogger(UserController.class);
 
-    UserService userService;
-    ReservationService reservationService;
+    private final UserService userService;
+    private final ReservationService reservationService;
 
     /**
      * @param id the ID of the user

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class SpaceService {
-    SpaceRepository spaceRepository;
+    private final SpaceRepository spaceRepository;
 
     public List<Space> getSpaceList() {
         return spaceRepository.findAll()
