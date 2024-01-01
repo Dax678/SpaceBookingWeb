@@ -15,14 +15,6 @@ import SeatData from "../../SeatData";
 const Seat = ({key, name, position, available, disabled, onClick}) => {
     let buttonClass = 'seat-button rounded-circle open';
 
-    // if (selected) {
-    //   buttonClass += ' selected';
-    // } else if (available) {
-    //   buttonClass += ' notAvailable';
-    // } else {
-    //   buttonClass += ' open';
-    // }
-
     const selectedButtonStyle = {
         backgroundColor: '#0082ff',
         borderColor: '#0082ff',
@@ -43,8 +35,8 @@ const Seat = ({key, name, position, available, disabled, onClick}) => {
                 left: position.left,
                 padding: '0',
                 fontSize: '12px',
-                ...(available ? selectedButtonStyle : {}),
-                ...(disabled ? disabledButtonStyle : {}),
+                ...(available ? disabledButtonStyle : {}),
+                ...(disabled ? selectedButtonStyle : {}),
             }}
             disabled={available || disabled}
             onClick={onClick}
@@ -99,7 +91,7 @@ const FloorPlan = () => {
 
 
     useEffect(() => {
-        const updatedSeatData = seatData.map(seat => ({
+        const updatedSeatData = seatData.filter(seat => seat.floorId == floorId).map(seat => ({
             ...seat,
             isSelected: selectedSeat.includes(seat.id),
             isAvailable: disabledSpaces.includes(seat.id),

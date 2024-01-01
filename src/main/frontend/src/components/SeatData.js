@@ -1,20 +1,20 @@
 const seatData = [
     //Floor 1
-    { id: 1, floorId: 1, name: 'F1_001', position: { top: '60px', left: '270px' }, isSelected: false, isAvailable: true },
-    { id: 2, floorId: 1, name: 'F1_002', position: { top: '110px', left: '270px' }, isSelected: false, isAvailable: true },
-    { id: 3, floorId: 1, name: 'F1_003', position: { top: '160px', left: '270px' }, isSelected: false, isAvailable: true },
+    { id: 1, floorId: 1, name: 'F1_001', position: { top: '700px', left: '200px' }, isSelected: false, isAvailable: true },
+    { id: 2, floorId: 1, name: 'F1_002', position: { top: '700px', left: '350px' }, isSelected: false, isAvailable: true },
+    { id: 3, floorId: 1, name: 'F1_003', position: { top: '700px', left: '500px' }, isSelected: false, isAvailable: true },
 
-    { id: 4, floorId: 1, name: 'F1_004', position: { top: '60px', left: '370px' }, isSelected: false, isAvailable: true },
-    { id: 5, floorId: 1, name: 'F1_005', position: { top: '110px', left: '370px' }, isSelected: false, isAvailable: true },
-    { id: 6, floorId: 1, name: 'F1_006', position: { top: '160px', left: '370px' }, isSelected: false, isAvailable: true },
+    { id: 4, floorId: 1, name: 'F1_004', position: { top: '700px', left: '730px' }, isSelected: false, isAvailable: true },
+    { id: 5, floorId: 1, name: 'F1_005', position: { top: '700px', left: '880px' }, isSelected: false, isAvailable: true },
+    { id: 6, floorId: 1, name: 'F1_006', position: { top: '700px', left: '1025px' }, isSelected: false, isAvailable: true },
 
-    { id: 7, floorId: 1, name: 'F1_007', position: { top: '60px', left: '440px' }, isSelected: false, isAvailable: true },
-    { id: 8, floorId: 1, name: 'F1_008', position: { top: '110px', left: '440px' }, isSelected: false, isAvailable: true },
-    { id: 9, floorId: 1, name: 'F1_009', position: { top: '160px', left: '440px' }, isSelected: false, isAvailable: true },
+    { id: 7, floorId: 1, name: 'F1_007', position: { top: '80px', left: '530px' }, isSelected: false, isAvailable: true },
+    { id: 8, floorId: 1, name: 'F1_008', position: { top: '80px', left: '630px' }, isSelected: false, isAvailable: true },
+    { id: 9, floorId: 1, name: 'F1_009', position: { top: '160px', left: '500px' }, isSelected: false, isAvailable: true },
 
-    { id: 10, floorId: 1, name: 'F1_010', position: { top: '60px', left: '540px' }, isSelected: false, isAvailable: true },
-    { id: 11, floorId: 1, name: 'F1_011', position: { top: '110px', left: '540px' }, isSelected: false, isAvailable: true },
-    { id: 12, floorId: 1, name: 'F1_012', position: { top: '160px', left: '540px' }, isSelected: false, isAvailable: true },
+    { id: 10, floorId: 1, name: 'F1_010', position: { top: '160px', left: '660px' }, isSelected: false, isAvailable: true },
+    { id: 11, floorId: 1, name: 'F1_011', position: { top: '230px', left: '540px' }, isSelected: false, isAvailable: true },
+    { id: 12, floorId: 1, name: 'F1_012', position: { top: '230px', left: '620px' }, isSelected: false, isAvailable: true },
 
     // Floor 2
     { id: 13, floorId: 2, name: 'F2_001', position: { top: '60px', left: '270px' }, isSelected: false, isAvailable: true },
