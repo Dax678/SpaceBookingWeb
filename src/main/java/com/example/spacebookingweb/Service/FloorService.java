@@ -1,5 +1,6 @@
 package com.example.spacebookingweb.Service;
 
+import com.example.spacebookingweb.Database.Entity.EFloor;
 import com.example.spacebookingweb.Database.Entity.Floor;
 import com.example.spacebookingweb.Repository.FloorRepository;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ public class FloorService {
     }
 
     public Optional<Floor> getFloorByName(String type) {
-        return floorRepository.findFloorByName(type);
+        return floorRepository.findFloorByName(EFloor.valueOf(type));
     }
 
     public List<Floor> getAll() {
