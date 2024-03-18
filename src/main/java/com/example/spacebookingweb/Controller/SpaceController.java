@@ -187,7 +187,7 @@ public class SpaceController {
 
         if(!floorService.checkFloorIsPresent(id)) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Floor with id: " + id + " not found"));
 
-        List<Space> spaceList = spaceService.getSpacesByFloorIdAndType(id, ESpace.valueOf(type), date, Boolean.parseBoolean(status));
+        List<Space> spaceList = spaceService.getSpacesByFloorIdAndTypeAndDateAndStatus(id, ESpace.valueOf(type), date, Boolean.parseBoolean(status));
 
         return ResponseEntity.status(HttpStatus.OK).body(spaceList);
     }

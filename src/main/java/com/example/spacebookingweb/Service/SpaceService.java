@@ -66,8 +66,8 @@ public class SpaceService {
                 .collect(Collectors.toList());
     }
 
-    public List<Space> getSpacesByFloorIdAndType(Long floorId, ESpace type, LocalDate date, Boolean bool) {
-        return spaceRepository.findSpacesByFloor_idAndType(floorId, type, date, bool)
+    public List<Space> getSpacesByFloorIdAndTypeAndDateAndStatus(Long floorId, ESpace type, LocalDate date, Boolean bool) {
+        return spaceRepository.findSpacesByFloorIdAndTypeAndDateAndStatus(floorId, type, date, bool)
                 .stream()
                 .sorted(Comparator.comparingLong(Space::getId))
                 .collect(Collectors.toList());

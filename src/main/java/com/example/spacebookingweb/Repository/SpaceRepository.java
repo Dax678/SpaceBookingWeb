@@ -28,5 +28,5 @@ public interface SpaceRepository extends JpaRepository<Space, Long> {
             "AND s.floorId=:floorId " +
             "AND s.type=:type " +
             "AND s.isAvailable=true")
-    List<Space> findSpacesByFloor_idAndType(Long floorId, ESpace type, LocalDate date, Boolean bool);
+    List<Space> findSpacesByFloorIdAndTypeAndDateAndStatus(Long floorId, ESpace type, LocalDate date, Boolean bool);
 }
