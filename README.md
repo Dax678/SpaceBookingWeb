@@ -8,7 +8,7 @@ This is a full-stack web application built using Spring Boot on the backend, wit
 - Fully modular architecture separating the frontend and backend.
 
 ## Technologies Used:
-- Backend: Java, Spring Boot, Spring Data JPA
+- Backend: Java, Spring Boot, Spring Data JPA, Spring Security (+ Token JWT)
 - Frontend: ReactJS, JavaScript, HTML, CSS
 - Database: PostgreSQL
 
