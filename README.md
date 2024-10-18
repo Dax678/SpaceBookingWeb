@@ -5,20 +5,24 @@
 
 ## Login Page
 
-![loginPage](https://github.com/Dax678/SpaceBookingWeb/assets/97410688/40c31765-abe5-44b6-acff-fedcc773fb8c)
+![loginPage](https://github.com/user-attachments/assets/ce5fc566-a027-4506-b8e1-9c825bb119c0)
 
 ## Register Page
 
-![RegisterPage](https://github.com/Dax678/SpaceBookingWeb/assets/97410688/ef072426-2c9d-4aa5-bf9c-b428e3f9b79d)
+![registerPage](https://github.com/user-attachments/assets/69c5e39e-329b-4826-88a2-faf557c26a3c)
 
-## Home Page with expanded navigation (with logged user)
+## Registration Confirmation Modal
 
-![HomePageWithExpandedNavigation_2](https://github.com/Dax678/SpaceBookingWeb/assets/97410688/297d3c9f-26b3-4724-8674-6912b0a99220)
+![registrationConfirmationModal](https://github.com/user-attachments/assets/90ca1415-1a86-45c9-a4ff-083183ddc35a)
 
-## Booking list Page
+## Page with reservation form
 
-![BookingListPage_1](https://github.com/Dax678/SpaceBookingWeb/assets/97410688/e298d3d8-8d8e-4cbc-b31a-3ad7f94648b0)
+![reservationForm](https://github.com/user-attachments/assets/3686847f-7291-4639-b9db-a54342fd9d60)
 
-## Booking Page
+## Page with a graphic reservation form
 
-![BookingPage_1](https://github.com/Dax678/SpaceBookingWeb/assets/97410688/a7a969fd-193a-4fcb-a094-893a4e63abf3)
+![image](https://github.com/user-attachments/assets/37f90586-ab7e-4f86-bf3d-a487951a7ee8)
+
+## Page with user's active reservations
+
+![image](https://github.com/user-attachments/assets/4f22565f-fef4-4c5f-9f4a-2c4ef43ab3bd)
